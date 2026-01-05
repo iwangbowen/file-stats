@@ -26,11 +26,6 @@ export function activate(context: vscode.ExtensionContext) {
         () => statusBarManager.showQuickPick()
     );
 
-    const toggleCommand = vscode.commands.registerCommand(
-        'file-stats.toggleDetailedInfo',
-        () => statusBarManager.toggleDetailedInfo()
-    );
-
     const refreshCommand = vscode.commands.registerCommand(
         'file-stats.refreshStats',
         () => statusBarManager.refresh()
@@ -39,10 +34,14 @@ export function activate(context: vscode.ExtensionContext) {
     const copyStatsCommand = vscode.commands.registerCommand(
         'file-stats.copyStats',
         async () => {
-            const stats = fileStatsProvider.getCurrentStats();
+            const stats = statusBarManager.getCurrentStats();
             if (stats) {
                 await vscode.env.clipboard.writeText(JSON.stringify(stats, null, 2));
                 vscode.window.showInformationMessage('File statistics copied to clipboard');
+                statusBarManager.log('File statistics copied to clipboard');
+            } else {
+                vscode.window.showWarningMessage('No file statistics available');
+                statusBarManager.log('Failed to copy: No file statistics available');
             }
         }
     );
@@ -78,7 +77,6 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         showWebviewCommand,
         showQuickPickCommand,
-        toggleCommand,
         refreshCommand,
         copyStatsCommand,
         onSave,
@@ -90,6 +88,7 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     // Initial update
+    statusBarManager.log('File Stats extension activated');
     if (vscode.window.activeTextEditor) {
         statusBarManager.updateForEditor(vscode.window.activeTextEditor);
     }

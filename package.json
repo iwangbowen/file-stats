@@ -46,11 +46,6 @@
         "category": "File Stats"
       },
       {
-        "command": "file-stats.toggleDetailedInfo",
-        "title": "Toggle Detailed Information",
-        "category": "File Stats"
-      },
-      {
         "command": "file-stats.refreshStats",
         "title": "Refresh Statistics",
         "category": "File Stats"
@@ -61,14 +56,7 @@
         "category": "File Stats"
       }
     ],
-    "keybindings": [
-      {
-        "command": "file-stats.toggleDetailedInfo",
-        "key": "ctrl+shift+'",
-        "mac": "cmd+shift+'",
-        "when": "editorTextFocus"
-      }
-    ],
+    "keybindings": [],
     "configuration": {
       "type": "object",
       "title": "File Stats Configuration",
