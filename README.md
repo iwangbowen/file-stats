@@ -181,12 +181,6 @@ This extension is inspired by [vscode-filesize](https://github.com/mkxml/vscode-
 - **Debounced auto-refresh** - Performance optimization for large files
 - **More MIME types** - Better language detection
 
-### Better Architecture
-
-- Separated concerns (Providers, Managers, Config)
-- Modular design for easier testing and extension
-- Better resource cleanup and disposal
-
 ### Improved UX
 
 - More intuitive configuration options
