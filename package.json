@@ -37,23 +37,28 @@
     "commands": [
       {
         "command": "file-stats.showWebview",
-        "title": "File Stats: Open Statistics Panel"
+        "title": "Open Statistics Panel",
+        "category": "File Stats"
       },
       {
         "command": "file-stats.showQuickPick",
-        "title": "File Stats: Show Actions Menu"
+        "title": "Show Actions Menu",
+        "category": "File Stats"
       },
       {
         "command": "file-stats.toggleDetailedInfo",
-        "title": "File Stats: Toggle Detailed Information"
+        "title": "Toggle Detailed Information",
+        "category": "File Stats"
       },
       {
         "command": "file-stats.refreshStats",
-        "title": "File Stats: Refresh Statistics"
+        "title": "Refresh Statistics",
+        "category": "File Stats"
       },
       {
         "command": "file-stats.copyStats",
-        "title": "File Stats: Copy Statistics to Clipboard"
+        "title": "Copy Statistics to Clipboard",
+        "category": "File Stats"
       }
     ],
     "keybindings": [
