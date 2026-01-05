@@ -5,13 +5,17 @@ Enhanced file statistics display for Visual Studio Code. Shows file size, line c
 ## Features
 
 - 📊 **Real-time Statistics**: Displays file size and statistics in the status bar
-- 📈 **Detailed View**: Click the status bar to see comprehensive file information
+- 🎯 **Interactive Menu**: Click status bar to access QuickPick menu with actions
+- 📊 **Webview Panel**: Beautiful interactive statistics panel
 - 🗜️ **Compression Info**: Shows gzip and brotli compressed sizes
 - 📝 **Text Metrics**: Line count, character count, and word count
 - ⚙️ **Customizable**: Flexible configuration options
 - 🎨 **Custom Format**: Customize status bar display format
 - 📋 **Copy Stats**: One-click copy statistics to clipboard
 - 🔄 **Auto-refresh**: Automatically updates when files change
+- 💡 **Hover Tooltip**: View detailed stats without clicking
+- 🎛️ **Position Control**: Display on left or right side of status bar (instant update)
+- 📝 **Logging**: Comprehensive logging with ISO 8601 timestamps
 
 ## Screenshots
 
@@ -53,14 +57,34 @@ Or search for "File Stats" in the Extensions view (`Ctrl+Shift+X`).
 
 ### Status Bar
 
-The extension automatically displays file statistics in the status bar when you open a file. Click on the status bar item to toggle detailed information.
+The extension automatically displays file statistics in the status bar when you open a file.
+
+**Click the status bar** to open a QuickPick menu with the following options:
+- **Open Statistics Panel** - View detailed stats in an interactive Webview panel
+- **Refresh Statistics** - Manually refresh the current file statistics
+- **Copy Statistics to Clipboard** - Copy stats as JSON format
+
+**Hover over the status bar** to see a tooltip with detailed information including:
+- File size (raw and formatted)
+- Line count, character count, word count
+- Gzip and Brotli compressed sizes (if enabled)
+- File type and modification time
 
 ### Commands
 
-- **File Stats: Toggle Detailed Information** - Show/hide the detailed stats panel
-  - Keyboard: `Ctrl+Shift+'` (Windows/Linux) or `Cmd+Shift+'` (Mac)
+Access these commands via Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`):
+
+- **File Stats: Open Statistics Panel** - Show interactive Webview panel
+- **File Stats: Show Actions Menu** - Show QuickPick menu
 - **File Stats: Refresh Statistics** - Manually refresh the statistics
 - **File Stats: Copy Statistics to Clipboard** - Copy stats as JSON
+
+### Output Channel
+
+View detailed logs in the Output panel:
+1. Open Output panel: View → Output (or `Ctrl+Shift+U`)
+2. Select "File Stats" from the dropdown
+3. View timestamped logs in ISO 8601 format
 
 ## Configuration
 
