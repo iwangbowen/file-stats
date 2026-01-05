@@ -10,6 +10,7 @@ export class StatusBarManager implements vscode.Disposable {
     private configManager: ConfigManager;
     private refreshTimer: NodeJS.Timeout | null = null;
     private webviewProvider: StatsWebviewProvider;
+    private currentStats: FileStats | null = null;
 
     constructor(configManager: ConfigManager, extensionUri: vscode.Uri) {
         this.configManager = configManager;
@@ -17,13 +18,38 @@ export class StatusBarManager implements vscode.Disposable {
         this.outputChannel = vscode.window.createOutputChannel('File Stats');
         this.webviewProvider = new StatsWebviewProvider(extensionUri);
 
-        const position = configManager.get('displayPosition');
+        this.statusBarItem = this.createStatusBarItem();
+    }
+
+    private createStatusBarItem(): vscode.StatusBarItem {
+        const position = this.configManager.get('displayPosition');
         const alignment = position === 'right'
             ? vscode.StatusBarAlignment.Right
             : vscode.StatusBarAlignment.Left;
 
-        this.statusBarItem = vscode.window.createStatusBarItem(alignment, 100);
-        this.statusBarItem.command = 'file-stats.showQuickPick';
+        const item = vscode.window.createStatusBarItem(alignment, 100);
+        item.command = 'file-stats.showQuickPick';
+        return item;
+    }
+
+    private recreateStatusBarItem(): void {
+        // Save current stats and visibility
+        const wasVisible = this.statusBarItem.text !== '';
+        const currentText = this.statusBarItem.text;
+        const currentTooltip = this.statusBarItem.tooltip;
+
+        // Dispose old item
+        this.statusBarItem.dispose();
+
+        // Create new item
+        this.statusBarItem = this.createStatusBarItem();
+
+        // Restore state if it was visible
+        if (wasVisible && this.currentStats) {
+            this.statusBarItem.text = currentText;
+            this.statusBarItem.tooltip = currentTooltip;
+            this.statusBarItem.show();
+        }
     }
 
     public async updateForEditor(editor: vscode.TextEditor): Promise<void> {
@@ -49,6 +75,7 @@ export class StatusBarManager implements vscode.Disposable {
     }
 
     private updateStatusBar(stats: FileStats): void {
+        this.currentStats = stats;
         const config = this.configManager.getAll();
         let text = config.statusBarFormat;
 
@@ -72,6 +99,7 @@ export class StatusBarManager implements vscode.Disposable {
     }
 
     public hideStatusBar(): void {
+        this.currentStats = null;
         this.statusBarItem.hide();
     }
 
@@ -197,6 +225,15 @@ export class StatusBarManager implements vscode.Disposable {
             await this.updateForEditor(editor);
             this.log('File statistics refreshed');
         }
+    }
+
+    public handleConfigChange(affectsDisplayPosition: boolean = false): void {
+        if (affectsDisplayPosition) {
+            this.log('Display position changed, recreating status bar...');
+            this.recreateStatusBarItem();
+        }
+        // Refresh to apply other config changes
+        this.refresh();
     }
 
     public scheduleRefresh(delay: number): void {

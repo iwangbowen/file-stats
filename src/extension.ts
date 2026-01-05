@@ -71,7 +71,8 @@ export function activate(context: vscode.ExtensionContext) {
     const onConfigChange = vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('fileStats')) {
             configManager.reload();
-            statusBarManager.refresh();
+            const affectsPosition = e.affectsConfiguration('fileStats.displayPosition');
+            statusBarManager.handleConfigChange(affectsPosition);
         }
     });
 
