@@ -5,6 +5,24 @@ All notable changes to the "file-stats" extension will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.9] - 2026-01-05
+
+### Changed
+
+- **Webview UI Enhancement**: Replaced emoji icons with VS Code native Codicons for better visual consistency
+  - Copy button: Now uses `codicon-copy` icon
+  - Refresh button: Now uses `codicon-refresh` icon
+  - Close button: Now uses `codicon-close` icon
+- Modernized button design with cleaner flat style
+- Improved button hover effects with better visual feedback
+- Added `@vscode/codicons` dependency for native icon support
+
+### Improved
+
+- Better integration with VS Code's native UI theme
+- More professional and consistent appearance
+- Enhanced user experience with clearer, more intuitive icons
+
 ## [1.0.8] - 2026-01-05
 
 ### Fixed
