@@ -193,47 +193,58 @@ export class StatusBarManager implements vscode.Disposable {
         const config = this.configManager.getAll();
         const tooltip = new vscode.MarkdownString();
         tooltip.isTrusted = true;
-        tooltip.supportHtml = true;
 
-        // Add file path
-        tooltip.appendMarkdown(`### 📄 ${stats.path}\n\n`);
-        tooltip.appendMarkdown('---\n\n');
+        // Get file name
+        const fileName = stats.path.split(/[\\/]/).pop() || stats.path;
+
+        // Add file name
+        tooltip.appendMarkdown(`**${fileName}**\n\n`);
 
         // Basic info
-        tooltip.appendMarkdown(`**Size:** ${stats.prettySize}\n\n`);
+        tooltip.appendMarkdown(`Size: ${stats.prettySize}`);
 
         if (config.showRawInBytes) {
-            tooltip.appendMarkdown(`**Bytes:** ${stats.size.toLocaleString()}\n\n`);
+            tooltip.appendMarkdown(` (${stats.size.toLocaleString()} bytes)`);
+        }
+        tooltip.appendMarkdown(`\n\n`);
+
+        // Text statistics
+        const statsParts: string[] = [];
+        if (config.showLineCount && stats.lineCount !== undefined) {
+            statsParts.push(`Lines: ${stats.lineCount.toLocaleString()}`);
+        }
+        if (config.showCharCount && stats.charCount !== undefined) {
+            statsParts.push(`Chars: ${stats.charCount.toLocaleString()}`);
+        }
+        if (config.showWordCount && stats.wordCount !== undefined) {
+            statsParts.push(`Words: ${stats.wordCount.toLocaleString()}`);
+        }
+
+        if (statsParts.length > 0) {
+            tooltip.appendMarkdown(statsParts.join(' | '));
+            tooltip.appendMarkdown(`\n\n`);
         }
 
         // Compression
+        const compressionParts: string[] = [];
         if (config.showGzip && stats.gzipSize) {
-            tooltip.appendMarkdown(`**Gzipped:** ${stats.gzipSize}\n\n`);
+            compressionParts.push(`Gzip: ${stats.gzipSize}`);
         }
         if (config.showBrotli && stats.brotliSize) {
-            tooltip.appendMarkdown(`**Brotli:** ${stats.brotliSize}\n\n`);
+            compressionParts.push(`Brotli: ${stats.brotliSize}`);
         }
 
-        // Text statistics
-        if (config.showLineCount && stats.lineCount !== undefined) {
-            tooltip.appendMarkdown(`**Lines:** ${stats.lineCount.toLocaleString()}\n\n`);
-        }
-        if (config.showCharCount && stats.charCount !== undefined) {
-            tooltip.appendMarkdown(`**Characters:** ${stats.charCount.toLocaleString()}\n\n`);
-        }
-        if (config.showWordCount && stats.wordCount !== undefined) {
-            tooltip.appendMarkdown(`**Words:** ${stats.wordCount.toLocaleString()}\n\n`);
+        if (compressionParts.length > 0) {
+            tooltip.appendMarkdown(compressionParts.join(' | '));
+            tooltip.appendMarkdown(`\n\n`);
         }
 
         // File metadata
         if (stats.mimeType) {
-            tooltip.appendMarkdown(`**MIME Type:** ${stats.mimeType}\n\n`);
-        }
-        if (stats.prettyCreated) {
-            tooltip.appendMarkdown(`**Created:** ${stats.prettyCreated}\n\n`);
+            tooltip.appendMarkdown(`Type: ${stats.mimeType}\n\n`);
         }
         if (stats.prettyModified) {
-            tooltip.appendMarkdown(`**Modified:** ${stats.prettyModified}\n\n`);
+            tooltip.appendMarkdown(`Modified: ${stats.prettyModified}`);
         }
 
         return tooltip;
