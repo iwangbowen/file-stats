@@ -1,0 +1,164 @@
+{
+  "name": "file-stats",
+  "displayName": "File Stats",
+  "description": "Enhanced file statistics in VS Code status bar with real-time updates",
+  "version": "1.0.0",
+  "publisher": "iwangbowen",
+  "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iwangbowen/file-stats"
+  },
+  "keywords": [
+    "file",
+    "size",
+    "filesize",
+    "statistics",
+    "status bar",
+    "info",
+    "metrics",
+    "performance"
+  ],
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "extensionKind": [
+    "workspace"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "file-stats.toggleDetailedInfo",
+        "title": "File Stats: Toggle Detailed Information"
+      },
+      {
+        "command": "file-stats.refreshStats",
+        "title": "File Stats: Refresh Statistics"
+      },
+      {
+        "command": "file-stats.copyStats",
+        "title": "File Stats: Copy Statistics to Clipboard"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "file-stats.toggleDetailedInfo",
+        "key": "ctrl+shift+'",
+        "mac": "cmd+shift+'",
+        "when": "editorTextFocus"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "File Stats Configuration",
+      "properties": {
+        "fileStats.useDecimal": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use SI units (1000-based) instead of IEC units (1024-based)"
+        },
+        "fileStats.use24HourFormat": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use 24-hour time format instead of 12-hour format"
+        },
+        "fileStats.showGzip": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show gzip compressed size in detailed view"
+        },
+        "fileStats.showBrotli": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show brotli compressed size in detailed view"
+        },
+        "fileStats.showRawInBytes": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show raw size in bytes in detailed view"
+        },
+        "fileStats.showGzipInStatusBar": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show gzip size in status bar"
+        },
+        "fileStats.showBrotliInStatusBar": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show brotli size in status bar"
+        },
+        "fileStats.displayPosition": {
+          "type": "string",
+          "enum": ["left", "right"],
+          "default": "left",
+          "description": "Status bar display position"
+        },
+        "fileStats.showLineCount": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show line count in detailed view"
+        },
+        "fileStats.showCharCount": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show character count in detailed view"
+        },
+        "fileStats.showWordCount": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show word count for text files"
+        },
+        "fileStats.autoRefresh": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically refresh stats when file changes"
+        },
+        "fileStats.statusBarFormat": {
+          "type": "string",
+          "default": "${size}",
+          "description": "Custom status bar format. Available variables: ${size}, ${lines}, ${chars}, ${words}"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.75.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.56.0",
+    "glob": "^10.3.10",
+    "mocha": "^10.2.0",
+    "prettier": "^3.2.4",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "filesize": "^10.1.0"
+  }
+}
