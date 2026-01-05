@@ -75,36 +75,31 @@ case $choice in
     2)
         echo "🚀 正在发布到市场..."
 
-        # 检查是否已登录
-        echo "请选择版本升级类型:"
-        echo "1) patch (1.0.0 -> 1.0.1)"
-        echo "2) minor (1.0.0 -> 1.1.0)"
-        echo "3) major (1.0.0 -> 2.0.0)"
-        echo "4) 使用当前版本"
-        read -p "选择 (1-4): " -n 1 -r version_choice
+        # 获取当前版本
+        current_version=$(node -p "require('./package.json').version")
+        echo ""
+        echo "📌 当前版本: $current_version"
+        echo ""
+        echo "⚠️  重要: 此脚本不会自动升级版本号"
+        echo "   请在发布前手动更新 package.json 和 CHANGELOG.md 中的版本号"
+        echo ""
+
+        read -p "确认使用版本 $current_version 发布? (y/n) " -n 1 -r
         echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            echo "❌ 已取消"
+            exit 1
+        fi
 
-        case $version_choice in
-            1)
-                vsce publish patch --no-dependencies
-                ;;
-            2)
-                vsce publish minor --no-dependencies
-                ;;
-            3)
-                vsce publish major --no-dependencies
-                ;;
-            4)
-                vsce publish --no-dependencies
-                echo "❌ 无效选择"
-                exit 1
-                ;;
-        esac
+        # 直接发布,不自动升级版本号
+        # 参考: https://code.visualstudio.com/api/working-with-extensions/publishing-extension
+        vsce publish --no-dependencies
 
+        echo ""
         echo "✅ 发布完成!"
         echo ""
         echo "🌐 查看扩展:"
-        echo "   https://marketplace.visualstudio.com/items?itemName=iwangbowen.file-stats"
+        echo "   https://marketplace.visualstudio.com/items?itemName=WangBowen.file-stats"
         ;;
     3)
         echo "❌ 已取消"
