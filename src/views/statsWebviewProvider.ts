@@ -1,11 +1,13 @@
 import * as vscode from 'vscode';
 import { FileStats } from '../providers/fileStatsProvider';
+import { getFileNameFromPath } from '../utils/formatUtils';
 
-export class StatsWebviewProvider {
+export class StatsWebviewProvider implements vscode.Disposable {
     private panel: vscode.WebviewPanel | undefined;
     private currentStats: FileStats | null = null;
+    private readonly disposables: vscode.Disposable[] = [];
 
-    constructor(private extensionUri: vscode.Uri) {}
+    constructor(private readonly extensionUri: vscode.Uri) {}
 
     public show(stats: FileStats) {
         this.currentStats = stats;
@@ -31,20 +33,19 @@ export class StatsWebviewProvider {
 
             this.panel.webview.html = this.getHtmlContent(stats);
 
-            // Handle messages from webview
-            this.panel.webview.onDidReceiveMessage(
-                message => this.handleMessage(message),
-                undefined,
-                []
-            );
-
-            // Cleanup when panel is closed
-            this.panel.onDidDispose(
-                () => {
-                    this.panel = undefined;
-                },
-                undefined,
-                []
+            // Handle messages from webview and cleanup when panel is closed
+            this.disposables.push(
+                this.panel.webview.onDidReceiveMessage(
+                    message => this.handleMessage(message)
+                ),
+                this.panel.onDidDispose(
+                    () => {
+                        this.panel = undefined;
+                        // Clear all disposables when panel is disposed
+                        this.disposables.forEach(d => d.dispose());
+                        this.disposables.length = 0;
+                    }
+                )
             );
         }
     }
@@ -78,7 +79,7 @@ export class StatsWebviewProvider {
     }
 
     private getHtmlContent(stats: FileStats): string {
-        const fileName = stats.path.split(/[\\/]/).pop() || stats.path;
+        const fileName = getFileNameFromPath(stats.path);
 
         return `<!DOCTYPE html>
 <html lang="en">
@@ -276,5 +277,8 @@ export class StatsWebviewProvider {
         if (this.panel) {
             this.panel.dispose();
         }
+        // Dispose all event listeners
+        this.disposables.forEach(d => d.dispose());
+        this.disposables.length = 0;
     }
 }

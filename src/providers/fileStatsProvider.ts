@@ -4,6 +4,7 @@ import * as zlib from 'zlib';
 import { promisify } from 'util';
 import { filesize } from 'filesize';
 import { ConfigManager } from '../managers/configManager';
+import { formatDate, countWords } from '../utils/formatUtils';
 
 const gzip = promisify(zlib.gzip);
 const brotliCompress = promisify(zlib.brotliCompress);
@@ -53,8 +54,8 @@ export class FileStatsProvider implements vscode.Disposable {
                 prettySize: this.formatSize(size, config.useDecimal),
                 created: fileStats.birthtime,
                 modified: fileStats.mtime,
-                prettyCreated: this.formatDate(fileStats.birthtime, config.use24HourFormat),
-                prettyModified: this.formatDate(fileStats.mtime, config.use24HourFormat)
+                prettyCreated: formatDate(fileStats.birthtime, config.use24HourFormat),
+                prettyModified: formatDate(fileStats.mtime, config.use24HourFormat)
             };
 
             // Add compression sizes if enabled
@@ -87,7 +88,7 @@ export class FileStatsProvider implements vscode.Disposable {
             }
 
             if (config.showWordCount) {
-                stats.wordCount = this.countWords(text);
+                stats.wordCount = countWords(text);
             }
 
             // Try to determine MIME type
@@ -110,27 +111,6 @@ export class FileStatsProvider implements vscode.Disposable {
             base: useDecimal ? 10 : 2,
             standard: useDecimal ? 'si' : 'iec'
         }) as string;
-    }
-
-    private formatDate(date: Date, use24Hour: boolean): string {
-        const options: Intl.DateTimeFormatOptions = {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: !use24Hour
-        };
-        return date.toLocaleString(undefined, options);
-    }
-
-    private countWords(text: string): number {
-        const trimmed = text.trim();
-        if (trimmed.length === 0) {
-            return 0;
-        }
-        return trimmed.split(/\s+/).length;
     }
 
     private getMimeType(languageId: string): string {

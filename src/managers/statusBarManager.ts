@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { FileStatsProvider, FileStats } from '../providers/fileStatsProvider';
 import { ConfigManager } from './configManager';
 import { StatsWebviewProvider } from '../views/statsWebviewProvider';
+import { getFileNameFromPath, formatLogTimestamp } from '../utils/formatUtils';
 
 export class StatusBarManager implements vscode.Disposable {
     private statusBarItem: vscode.StatusBarItem;
@@ -157,14 +158,7 @@ export class StatusBarManager implements vscode.Disposable {
     }
 
     public log(message: string, level: 'info' | 'error' = 'info'): void {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        const timestamp = formatLogTimestamp(new Date());
         const prefix = level === 'error' ? '[ERROR]' : '[INFO]';
         this.outputChannel.appendLine(`${timestamp} ${prefix} ${message}`);
     }
@@ -177,7 +171,7 @@ export class StatusBarManager implements vscode.Disposable {
         tooltip.isTrusted = true;
 
         // Get file name
-        const fileName = stats.path.split(/[\\/]/).pop() || stats.path;
+        const fileName = getFileNameFromPath(stats.path);
 
         // Add file name
         tooltip.appendMarkdown(`**${fileName}**\n\n`);
