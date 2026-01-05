@@ -36,6 +36,10 @@
   "contributes": {
     "commands": [
       {
+        "command": "file-stats.showQuickPick",
+        "title": "File Stats: Show Actions Menu"
+      },
+      {
         "command": "file-stats.toggleDetailedInfo",
         "title": "File Stats: Toggle Detailed Information"
       },

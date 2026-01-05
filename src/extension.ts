@@ -16,6 +16,11 @@ export function activate(context: vscode.ExtensionContext) {
     fileStatsProvider = new FileStatsProvider(configManager);
 
     // Register commands
+    const showQuickPickCommand = vscode.commands.registerCommand(
+        'file-stats.showQuickPick',
+        () => statusBarManager.showQuickPick()
+    );
+
     const toggleCommand = vscode.commands.registerCommand(
         'file-stats.toggleDetailedInfo',
         () => statusBarManager.toggleDetailedInfo()
@@ -66,6 +71,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Add to subscriptions
     context.subscriptions.push(
+        showQuickPickCommand,
         toggleCommand,
         refreshCommand,
         copyStatsCommand,

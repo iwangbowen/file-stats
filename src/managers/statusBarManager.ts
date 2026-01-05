@@ -21,6 +21,7 @@ export class StatusBarManager implements vscode.Disposable {
             : vscode.StatusBarAlignment.Left;
 
         this.statusBarItem = vscode.window.createStatusBarItem(alignment, 100);
+        this.statusBarItem.command = 'file-stats.showQuickPick';
     }
 
     public async updateForEditor(editor: vscode.TextEditor): Promise<void> {
@@ -72,6 +73,41 @@ export class StatusBarManager implements vscode.Disposable {
             this.hideDetailedInfo();
         } else {
             await this.showDetailedInfo();
+        }
+    }
+
+    public async showQuickPick(): Promise<void> {
+        const items: vscode.QuickPickItem[] = [
+            {
+                label: '$(output) View Detailed Info',
+                description: 'Show detailed statistics in output panel'
+            },
+            {
+                label: '$(refresh) Refresh Statistics',
+                description: 'Refresh current file statistics'
+            },
+            {
+                label: '$(clippy) Copy Statistics to Clipboard',
+                description: 'Copy file statistics as JSON'
+            }
+        ];
+
+        const selected = await vscode.window.showQuickPick(items, {
+            placeHolder: 'Select an action for file statistics'
+        });
+
+        if (selected) {
+            switch (selected.label) {
+                case '$(output) View Detailed Info':
+                    await vscode.commands.executeCommand('file-stats.toggleDetailedInfo');
+                    break;
+                case '$(refresh) Refresh Statistics':
+                    await vscode.commands.executeCommand('file-stats.refreshStats');
+                    break;
+                case '$(clippy) Copy Statistics to Clipboard':
+                    await vscode.commands.executeCommand('file-stats.copyStats');
+                    break;
+            }
         }
     }
 
