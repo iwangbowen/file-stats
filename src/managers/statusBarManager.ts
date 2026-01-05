@@ -29,15 +29,21 @@ export class StatusBarManager implements vscode.Disposable {
     public async updateForEditor(editor: vscode.TextEditor): Promise<void> {
         const document = editor.document;
 
+        // Only show status bar for file scheme (not settings, output, etc.)
         if (document.uri.scheme !== 'file') {
             this.hideStatusBar();
             return;
         }
 
-        const stats = await this.fileStatsProvider.getStatsForDocument(document);
-        if (stats) {
-            this.updateStatusBar(stats);
-        } else {
+        try {
+            const stats = await this.fileStatsProvider.getStatsForDocument(document);
+            if (stats) {
+                this.updateStatusBar(stats);
+            } else {
+                this.hideStatusBar();
+            }
+        } catch (error) {
+            console.error('Error updating status bar:', error);
             this.hideStatusBar();
         }
     }
@@ -65,7 +71,7 @@ export class StatusBarManager implements vscode.Disposable {
         this.statusBarItem.show();
     }
 
-    private hideStatusBar(): void {
+    public hideStatusBar(): void {
         this.statusBarItem.hide();
     }
 

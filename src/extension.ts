@@ -34,14 +34,20 @@ export function activate(context: vscode.ExtensionContext) {
     const copyStatsCommand = vscode.commands.registerCommand(
         'file-stats.copyStats',
         async () => {
-            const stats = statusBarManager.getCurrentStats();
-            if (stats) {
-                await vscode.env.clipboard.writeText(JSON.stringify(stats, null, 2));
-                vscode.window.showInformationMessage('File statistics copied to clipboard');
-                statusBarManager.log('File statistics copied to clipboard');
-            } else {
-                vscode.window.showWarningMessage('No file statistics available');
-                statusBarManager.log('Failed to copy: No file statistics available');
+            try {
+                const stats = statusBarManager.getCurrentStats();
+                if (stats) {
+                    const statsText = JSON.stringify(stats, null, 2);
+                    await vscode.env.clipboard.writeText(statsText);
+                    vscode.window.showInformationMessage('File statistics copied to clipboard');
+                    statusBarManager.log('File statistics copied to clipboard');
+                } else {
+                    vscode.window.showWarningMessage('No file statistics available. Please open a file first.');
+                    statusBarManager.log('Failed to copy: No file statistics available');
+                }
+            } catch (error) {
+                vscode.window.showErrorMessage('Failed to copy file statistics');
+                statusBarManager.log(`Error copying statistics: ${error}`);
             }
         }
     );
@@ -56,6 +62,9 @@ export function activate(context: vscode.ExtensionContext) {
     const onActiveEditorChange = vscode.window.onDidChangeActiveTextEditor((editor) => {
         if (editor) {
             statusBarManager.updateForEditor(editor);
+        } else {
+            // No active text editor (e.g., Settings page, Welcome page)
+            statusBarManager.hideStatusBar();
         }
     });
 
