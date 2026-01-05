@@ -81,12 +81,18 @@ export class StatsWebviewProvider implements vscode.Disposable {
     private getHtmlContent(stats: FileStats): string {
         const fileName = getFileNameFromPath(stats.path);
 
+        // Get Codicon font URI
+        const codiconsUri = this.panel?.webview.asWebviewUri(
+            vscode.Uri.joinPath(this.extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css')
+        );
+
         return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Statistics</title>
+    <link href="${codiconsUri}" rel="stylesheet" />
     <style>
         body {
             font-family: var(--vscode-font-family);
@@ -118,24 +124,25 @@ export class StatsWebviewProvider implements vscode.Disposable {
             gap: 8px;
         }
         .btn {
-            background: var(--vscode-button-background);
-            color: var(--vscode-button-foreground);
-            border: none;
+            background: transparent;
+            color: var(--vscode-foreground);
+            border: 1px solid var(--vscode-button-border);
             padding: 6px 12px;
             cursor: pointer;
-            border-radius: 2px;
-            font-size: 12px;
-            transition: background 0.2s;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 400;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
         .btn:hover {
-            background: var(--vscode-button-hoverBackground);
+            background: var(--vscode-list-hoverBackground);
+            border-color: var(--vscode-focusBorder);
         }
-        .btn-secondary {
-            background: var(--vscode-button-secondaryBackground);
-            color: var(--vscode-button-secondaryForeground);
-        }
-        .btn-secondary:hover {
-            background: var(--vscode-button-secondaryHoverBackground);
+        .btn:active {
+            transform: translateY(1px);
         }
         .stats-grid {
             display: grid;
@@ -182,14 +189,17 @@ export class StatsWebviewProvider implements vscode.Disposable {
                 <div class="file-path">${stats.path}</div>
             </div>
             <div class="actions">
-                <button class="btn btn-secondary" onclick="copyStats()">
-                    📋 Copy
+                <button class="btn" onclick="copyStats()">
+                    <i class="codicon codicon-copy"></i>
+                    Copy
                 </button>
-                <button class="btn btn-secondary" onclick="refreshStats()">
-                    🔄 Refresh
+                <button class="btn" onclick="refreshStats()">
+                    <i class="codicon codicon-refresh"></i>
+                    Refresh
                 </button>
-                <button class="btn btn-secondary" onclick="closePanel()">
-                    ✕
+                <button class="btn" onclick="closePanel()">
+                    <i class="codicon codicon-close"></i>
+                    Close
                 </button>
             </div>
         </div>
