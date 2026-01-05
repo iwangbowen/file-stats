@@ -17,6 +17,12 @@ Enhanced file statistics display for Visual Studio Code. Shows file size, line c
 - **Position Control**: Display on left or right side of status bar (instant update)
 - **Logging**: Comprehensive logging with ISO 8601 timestamps
 
+## Donation
+
+If you find this extension helpful, consider supporting the development:
+
+![WeChat Pay](resources/wechat-pay.jpg)
+
 ## Screenshots
 
 ### Status Bar Display
