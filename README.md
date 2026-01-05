@@ -4,29 +4,29 @@ Enhanced file statistics display for Visual Studio Code. Shows file size, line c
 
 ## Features
 
-- 📊 **Real-time Statistics**: Displays file size and statistics in the status bar
-- 🎯 **Interactive Menu**: Click status bar to access QuickPick menu with actions
-- 📊 **Webview Panel**: Beautiful interactive statistics panel
-- 🗜️ **Compression Info**: Shows gzip and brotli compressed sizes
-- 📝 **Text Metrics**: Line count, character count, and word count
-- ⚙️ **Customizable**: Flexible configuration options
-- 🎨 **Custom Format**: Customize status bar display format
-- 📋 **Copy Stats**: One-click copy statistics to clipboard
-- 🔄 **Auto-refresh**: Automatically updates when files change
-- 💡 **Hover Tooltip**: View detailed stats without clicking
-- 🎛️ **Position Control**: Display on left or right side of status bar (instant update)
-- 📝 **Logging**: Comprehensive logging with ISO 8601 timestamps
+- **Real-time Statistics**: Displays file size and statistics in the status bar
+- **Interactive Menu**: Click status bar to access QuickPick menu with actions
+- **Webview Panel**: Beautiful interactive statistics panel
+- **Compression Info**: Shows gzip and brotli compressed sizes
+- **Text Metrics**: Line count, character count, and word count
+- **Customizable**: Flexible configuration options
+- **Custom Format**: Customize status bar display format
+- **Copy Stats**: One-click copy statistics to clipboard
+- **Auto-refresh**: Automatically updates when files change
+- **Hover Tooltip**: View detailed stats without clicking
+- **Position Control**: Display on left or right side of status bar (instant update)
+- **Logging**: Comprehensive logging with ISO 8601 timestamps
 
 ## Screenshots
 
 ### Status Bar Display
 The extension displays file information directly in the status bar:
 ```
-📄 15.2 KB
+15.2 KB
 ```
 
 ### Detailed Information Panel
-Click the status bar item or press `Ctrl+Shift+'` to view detailed statistics:
+Click the status bar item to view detailed statistics:
 ```
 ======================================================================
 File: /path/to/your/file.js
@@ -174,24 +174,28 @@ Configure the extension in VS Code settings (`Ctrl+,` / `Cmd+,`):
 
 This extension is inspired by [vscode-filesize](https://github.com/mkxml/vscode-filesize) but includes several enhancements:
 
-### ✅ Modern TypeScript Implementation
+### Modern TypeScript Implementation
+
 - Full TypeScript rewrite with strong typing
 - Better code organization and maintainability
 - Improved error handling
 
-### ✅ Enhanced Features
+### Enhanced Features
+
 - **Line count, character count, word count** - Additional text metrics
 - **Custom status bar format** - Flexible display template
 - **Copy to clipboard** - Export statistics easily
 - **Debounced auto-refresh** - Performance optimization for large files
 - **More MIME types** - Better language detection
 
-### ✅ Better Architecture
+### Better Architecture
+
 - Separated concerns (Providers, Managers, Config)
 - Modular design for easier testing and extension
 - Better resource cleanup and disposal
 
-### ✅ Improved UX
+### Improved UX
+
 - More intuitive configuration options
 - Better error messages
 - Cleaner detailed view layout
