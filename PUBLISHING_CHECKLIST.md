@@ -132,7 +132,7 @@ pnpm run package
 
 ```bash
 # 使用发布脚本
-./scripts/publish.sh
+./publish.sh
 
 # 或手动发布
 pnpm run package
