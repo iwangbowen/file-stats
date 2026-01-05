@@ -2,7 +2,7 @@
   "name": "file-stats",
   "displayName": "File Stats",
   "description": "Enhanced file statistics in VS Code status bar with real-time updates",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "WangBowen",
   "icon": "icon.png",
   "repository": {
@@ -98,7 +98,10 @@
         },
         "fileStats.displayPosition": {
           "type": "string",
-          "enum": ["left", "right"],
+          "enum": [
+            "left",
+            "right"
+          ],
           "default": "left",
           "description": "Status bar display position"
         },
