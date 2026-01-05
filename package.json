@@ -3,7 +3,7 @@
   "displayName": "File Stats",
   "description": "Enhanced file statistics in VS Code status bar with real-time updates",
   "version": "1.0.0",
-  "publisher": "iwangbowen",
+  "publisher": "Wang Bowen",
   "icon": "icon.png",
   "repository": {
     "type": "git",
