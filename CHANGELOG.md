@@ -5,11 +5,20 @@ All notable changes to the "file-stats" extension will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.1] - 2026-01-05
+## [1.0.3] - 2026-01-05
+
+### Changed
+
+- Fixed logging timestamp to use local timezone instead of UTC
+- Improved timestamp format readability (YYYY-MM-DD HH:MM:SS)
+
+## [1.0.2] - 2026-01-05
 
 ### Changed
 
 - Optimized extension icon size from 1024x1024 to 128x128 pixels (reduced file size from 325KB to 7.7KB)
+- Removed emoji from README.md for more professional appearance
+- Removed incorrect keyboard shortcut reference from documentation
 
 ## [1.0.0] - 2026-01-05
 
