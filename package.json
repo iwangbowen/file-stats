@@ -36,6 +36,10 @@
   "contributes": {
     "commands": [
       {
+        "command": "file-stats.showWebview",
+        "title": "File Stats: Open Statistics Panel"
+      },
+      {
         "command": "file-stats.showQuickPick",
         "title": "File Stats: Show Actions Menu"
       },

@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { FileStatsProvider, FileStats } from '../providers/fileStatsProvider';
 import { ConfigManager } from './configManager';
+import { StatsWebviewProvider } from '../views/statsWebviewProvider';
 
 export class StatusBarManager implements vscode.Disposable {
     private statusBarItem: vscode.StatusBarItem;
@@ -9,11 +10,13 @@ export class StatusBarManager implements vscode.Disposable {
     private fileStatsProvider: FileStatsProvider;
     private configManager: ConfigManager;
     private refreshTimer: NodeJS.Timeout | null = null;
+    private webviewProvider: StatsWebviewProvider;
 
-    constructor(configManager: ConfigManager) {
+    constructor(configManager: ConfigManager, extensionUri: vscode.Uri) {
         this.configManager = configManager;
         this.fileStatsProvider = new FileStatsProvider(configManager);
         this.outputChannel = vscode.window.createOutputChannel('File Stats');
+        this.webviewProvider = new StatsWebviewProvider(extensionUri);
 
         const position = configManager.get('displayPosition');
         const alignment = position === 'right'
@@ -79,6 +82,10 @@ export class StatusBarManager implements vscode.Disposable {
     public async showQuickPick(): Promise<void> {
         const items: vscode.QuickPickItem[] = [
             {
+                label: '$(window) Open Statistics Panel',
+                description: 'Show interactive statistics panel'
+            },
+            {
                 label: '$(output) View Detailed Info',
                 description: 'Show detailed statistics in output panel'
             },
@@ -98,6 +105,9 @@ export class StatusBarManager implements vscode.Disposable {
 
         if (selected) {
             switch (selected.label) {
+                case '$(window) Open Statistics Panel':
+                    await vscode.commands.executeCommand('file-stats.showWebview');
+                    break;
                 case '$(output) View Detailed Info':
                     await vscode.commands.executeCommand('file-stats.toggleDetailedInfo');
                     break;
@@ -108,6 +118,15 @@ export class StatusBarManager implements vscode.Disposable {
                     await vscode.commands.executeCommand('file-stats.copyStats');
                     break;
             }
+        }
+    }
+
+    public showWebview(): void {
+        const stats = this.fileStatsProvider.getCurrentStats();
+        if (stats) {
+            this.webviewProvider.show(stats);
+        } else {
+            vscode.window.showWarningMessage('No file statistics available');
         }
     }
 
@@ -277,5 +296,6 @@ export class StatusBarManager implements vscode.Disposable {
         this.statusBarItem.dispose();
         this.outputChannel.dispose();
         this.fileStatsProvider.dispose();
+        this.webviewProvider.dispose();
     }
 }

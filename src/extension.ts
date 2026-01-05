@@ -12,10 +12,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Initialize managers
     configManager = new ConfigManager();
-    statusBarManager = new StatusBarManager(configManager);
+    statusBarManager = new StatusBarManager(configManager, context.extensionUri);
     fileStatsProvider = new FileStatsProvider(configManager);
 
     // Register commands
+    const showWebviewCommand = vscode.commands.registerCommand(
+        'file-stats.showWebview',
+        () => statusBarManager.showWebview()
+    );
+
     const showQuickPickCommand = vscode.commands.registerCommand(
         'file-stats.showQuickPick',
         () => statusBarManager.showQuickPick()
@@ -71,6 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Add to subscriptions
     context.subscriptions.push(
+        showWebviewCommand,
         showQuickPickCommand,
         toggleCommand,
         refreshCommand,
