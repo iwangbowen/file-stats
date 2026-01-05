@@ -5,9 +5,10 @@ All notable changes to the "file-stats" extension will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2024-01-15
+## [1.0.0] - 2026-01-05
 
 ### Added
+
 - Initial release
 - Display file size in status bar
 - Interactive statistics panel with QuickPick menu
@@ -27,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unified Output Channel logging system
 
 ### Features
+
 - Real-time file statistics display
 - Hover tooltip with detailed information
 - QuickPick menu for actions (View Details, Refresh, Copy)
@@ -40,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Smart filtering (only shows on file documents)
 
 ### Technical
+
 - TypeScript 5.3+
 - VS Code API 1.75+
 - Webpack bundling with production optimization
@@ -47,17 +50,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modular architecture (Providers, Managers, Views)
 - Dependency injection for logging
 - Resource cleanup and disposal
-
-## [Unreleased]
-
-### Planned
-- Historical file size tracking
-- File size trends visualization
-- Comparison with other files
-- Custom output formats (JSON, CSV, etc.)
-- Integration with Git to show size changes
-- Performance profiling for build optimization
-- Multi-file statistics aggregation
-- Folder size calculation
-- Remote file support
-- Custom metrics extensibility
