@@ -5,6 +5,27 @@ All notable changes to the "file-stats" extension will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2026-01-05
+
+### Fixed
+
+- Fixed Webview panel memory leak by properly managing event listener disposables
+- Event listeners now correctly cleaned up when panel is disposed
+
+### Changed
+
+- Refactored common utility functions to dedicated `formatUtils.ts` module
+- Extracted file name extraction logic to `getFileNameFromPath()`
+- Extracted date formatting logic to `formatDate()`
+- Extracted log timestamp formatting to `formatLogTimestamp()`
+- Extracted word counting logic to `countWords()`
+
+### Improved
+
+- Better code organization and maintainability
+- Reduced code duplication across multiple files
+- Improved memory management in Webview provider
+
 ## [1.0.6] - 2026-01-05
 
 ### Fixed

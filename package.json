@@ -2,7 +2,7 @@
   "name": "file-stats",
   "displayName": "File Stats",
   "description": "Enhanced file statistics in VS Code status bar with real-time updates",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "publisher": "WangBowen",
   "icon": "icon.png",
   "repository": {
