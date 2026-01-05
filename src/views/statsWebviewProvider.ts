@@ -81,9 +81,9 @@ export class StatsWebviewProvider implements vscode.Disposable {
     private getHtmlContent(stats: FileStats): string {
         const fileName = getFileNameFromPath(stats.path);
 
-        // Get Codicon font URI
+        // Get Codicon font URI from bundled location
         const codiconsUri = this.panel?.webview.asWebviewUri(
-            vscode.Uri.joinPath(this.extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css')
+            vscode.Uri.joinPath(this.extensionUri, 'dist', 'codicons', 'codicon.css')
         );
 
         return `<!DOCTYPE html>
