@@ -5,6 +5,15 @@ All notable changes to the "file-stats" extension will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-01-05
+
+### Fixed
+
+- Fixed Codicons not loading in published extension by adding webpack copy plugin
+  - Configured CopyWebpackPlugin to bundle codicons static assets (CSS, fonts) into dist directory
+  - Updated webview to reference bundled codicons from dist/codicons/ path
+  - Resolved "Failed to load resource: 404" error for codicon.css in production builds
+
 ## [1.0.9] - 2026-01-05
 
 ### Changed
