@@ -79,13 +79,6 @@ Access these commands via Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`):
 - **File Stats: Refresh Statistics** - Manually refresh the statistics
 - **File Stats: Copy Statistics to Clipboard** - Copy stats as JSON
 
-### Output Channel
-
-View detailed logs in the Output panel:
-1. Open Output panel: View → Output (or `Ctrl+Shift+U`)
-2. Select "File Stats" from the dropdown
-3. View timestamped logs in ISO 8601 format
-
 ## Configuration
 
 Configure the extension in VS Code settings (`Ctrl+,` / `Cmd+,`):
