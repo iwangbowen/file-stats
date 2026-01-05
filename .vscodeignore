@@ -14,3 +14,13 @@ tsconfig.json
 .github/**
 pnpm-lock.yaml
 .git/**
+.mypy_cache/**
+__pycache__/**
+*.py
+icon-original.png
+PUBLISH.md
+PAT_SETUP.md
+PUBLISHING_CHECKLIST.md
+publish.sh
+OPTIMIZATION.md
+PROJECT_SUMMARY.md
