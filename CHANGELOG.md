@@ -5,6 +5,12 @@ All notable changes to the "file-stats" extension will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-01-05
+
+### Changed
+
+- Optimized extension icon size from 1024x1024 to 128x128 pixels (reduced file size from 325KB to 7.7KB)
+
 ## [1.0.0] - 2026-01-05
 
 ### Added
