@@ -124,8 +124,10 @@ npm run compile
 1. **打包扩展**（可选，用于测试）:
 
 ```bash
-vsce package
+vsce package --no-dependencies
 ```
+
+> **注意**: 使用 `--no-dependencies` 标志跳过npm依赖检查，因为我们使用webpack打包，所有依赖已包含在bundle中。
 
 这会生成一个 `.vsix` 文件，可以手动安装测试：
 - VS Code → Extensions → ... → Install from VSIX
@@ -133,15 +135,15 @@ vsce package
 2. **发布到市场**:
 
 ```bash
-vsce publish
+vsce publish --no-dependencies
 ```
 
 或指定版本号自动升级：
 
 ```bash
-vsce publish patch  # 1.0.0 -> 1.0.1
-vsce publish minor  # 1.0.0 -> 1.1.0
-vsce publish major  # 1.0.0 -> 2.0.0
+vsce publish patch --no-dependencies  # 1.0.0 -> 1.0.1
+vsce publish minor --no-dependencies  # 1.0.0 -> 1.1.0
+vsce publish major --no-dependencies  # 1.0.0 -> 2.0.0
 ```
 
 ### 方法二：Web界面上传
@@ -149,7 +151,7 @@ vsce publish major  # 1.0.0 -> 2.0.0
 1. 打包扩展:
 
 ```bash
-vsce package
+vsce package --no-dependencies
 ```
 
 2. 访问 [Marketplace管理页面](https://marketplace.visualstudio.com/manage)
@@ -259,15 +261,17 @@ npm install -g @vscode/vsce
 # 2. 登录（输入PAT）
 vsce login iwangbowen
 
-# 3. 检查
-vsce ls  # 查看将要打包的文件
+# 3. 编译生产版本
+pnpm run package
 
-# 4. 测试打包
-vsce package
+# 4. 测试打包（可选）
+vsce package --no-dependencies
 
 # 5. 发布
-vsce publish
+vsce publish --no-dependencies
 ```
+
+> **重要**: 使用 `--no-dependencies` 标志，因为webpack已打包所有依赖
 
 ## 后续更新
 
@@ -278,7 +282,7 @@ git commit -m "描述更新内容"
 git push
 
 # 发布新版本
-vsce publish patch  # 或 minor/major
+vsce publish patch --no-dependencies  # 或 minor/major
 ```
 
 ## 参考资料

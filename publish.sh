@@ -65,7 +65,7 @@ echo
 case $choice in
     1)
         echo "📦 正在打包..."
-        vsce package
+        vsce package --no-dependencies
         vsix_file=$(ls -t *.vsix | head -1)
         echo "✅ 打包完成: $vsix_file"
         echo ""
@@ -86,18 +86,16 @@ case $choice in
 
         case $version_choice in
             1)
-                vsce publish patch
+                vsce publish patch --no-dependencies
                 ;;
             2)
-                vsce publish minor
+                vsce publish minor --no-dependencies
                 ;;
             3)
-                vsce publish major
+                vsce publish major --no-dependencies
                 ;;
             4)
-                vsce publish
-                ;;
-            *)
+                vsce publish --no-dependencies
                 echo "❌ 无效选择"
                 exit 1
                 ;;
