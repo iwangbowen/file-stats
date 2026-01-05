@@ -1,21 +1,15 @@
 import * as vscode from 'vscode';
-import { FileStatsProvider } from './providers/fileStatsProvider';
 import { StatusBarManager } from './managers/statusBarManager';
 import { ConfigManager } from './managers/configManager';
 
-let fileStatsProvider: FileStatsProvider;
 let statusBarManager: StatusBarManager;
 let configManager: ConfigManager;
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('File Stats extension is now active');
-
     // Initialize managers
     configManager = new ConfigManager();
     statusBarManager = new StatusBarManager(configManager, context.extensionUri);
-    fileStatsProvider = new FileStatsProvider(configManager);
 
-    // Register commands
     const showWebviewCommand = vscode.commands.registerCommand(
         'file-stats.showWebview',
         () => statusBarManager.showWebview()
@@ -93,17 +87,17 @@ export function activate(context: vscode.ExtensionContext) {
         onActiveEditorChange,
         onConfigChange,
         onTextChange,
-        statusBarManager,
-        fileStatsProvider
+        statusBarManager
     );
 
     // Initial update
-    statusBarManager.log('File Stats extension activated');
     if (vscode.window.activeTextEditor) {
         statusBarManager.updateForEditor(vscode.window.activeTextEditor);
     }
 }
 
 export function deactivate() {
-    console.log('File Stats extension is now deactivated');
+    if (statusBarManager) {
+        statusBarManager.log('File Stats extension is now deactivated');
+    }
 }

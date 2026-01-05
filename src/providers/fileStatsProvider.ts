@@ -27,9 +27,11 @@ export interface FileStats {
 export class FileStatsProvider implements vscode.Disposable {
     private currentStats: FileStats | null = null;
     private configManager: ConfigManager;
+    private readonly logger?: (message: string, level?: 'info' | 'error') => void;
 
-    constructor(configManager: ConfigManager) {
+    constructor(configManager: ConfigManager, logger?: (message: string, level?: 'info' | 'error') => void) {
         this.configManager = configManager;
+        this.logger = logger;
     }
 
     public async getStatsForDocument(document: vscode.TextDocument): Promise<FileStats | null> {
@@ -61,7 +63,7 @@ export class FileStatsProvider implements vscode.Disposable {
                     const gzipped = await gzip(content);
                     stats.gzipSize = this.formatSize(gzipped.length, config.useDecimal);
                 } catch (error) {
-                    console.error('Error calculating gzip size:', error);
+                    this.logger?.(`Error calculating gzip size: ${error}`, 'error');
                 }
             }
 
@@ -70,7 +72,7 @@ export class FileStatsProvider implements vscode.Disposable {
                     const brotlied = await brotliCompress(content);
                     stats.brotliSize = this.formatSize(brotlied.length, config.useDecimal);
                 } catch (error) {
-                    console.error('Error calculating brotli size:', error);
+                    this.logger?.(`Error calculating brotli size: ${error}`, 'error');
                 }
             }
 
@@ -94,7 +96,7 @@ export class FileStatsProvider implements vscode.Disposable {
             this.currentStats = stats;
             return stats;
         } catch (error) {
-            console.error('Error getting file stats:', error);
+            this.logger?.(`Error getting file stats: ${error}`, 'error');
             return null;
         }
     }

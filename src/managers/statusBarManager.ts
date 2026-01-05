@@ -14,10 +14,15 @@ export class StatusBarManager implements vscode.Disposable {
 
     constructor(configManager: ConfigManager, extensionUri: vscode.Uri) {
         this.configManager = configManager;
-        this.fileStatsProvider = new FileStatsProvider(configManager);
         this.outputChannel = vscode.window.createOutputChannel('File Stats');
-        this.webviewProvider = new StatsWebviewProvider(extensionUri);
 
+        // Create file stats provider with logger
+        this.fileStatsProvider = new FileStatsProvider(
+            configManager,
+            (message, level) => this.log(message, level)
+        );
+
+        this.webviewProvider = new StatsWebviewProvider(extensionUri);
         this.statusBarItem = this.createStatusBarItem();
     }
 
@@ -69,7 +74,7 @@ export class StatusBarManager implements vscode.Disposable {
                 this.hideStatusBar();
             }
         } catch (error) {
-            console.error('Error updating status bar:', error);
+            this.log(`Error updating status bar: ${error}`, 'error');
             this.hideStatusBar();
         }
     }
@@ -151,8 +156,10 @@ export class StatusBarManager implements vscode.Disposable {
         return this.fileStatsProvider.getCurrentStats();
     }
 
-    public log(message: string): void {
-        this.outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] ${message}`);
+    public log(message: string, level: 'info' | 'error' = 'info'): void {
+        const timestamp = new Date().toISOString();
+        const prefix = level === 'error' ? '[ERROR]' : '[INFO]';
+        this.outputChannel.appendLine(`${timestamp} ${prefix} ${message}`);
     }
 
 
