@@ -47,18 +47,11 @@ if [ ! -f "dist/extension.js" ]; then
 fi
 echo "✅ 编译成功"
 
-# 显示将要打包的文件
+# 显示文件大小
 echo ""
-echo "📋 将要打包的文件:"
-vsce ls
-
-# 确认
+echo "📊 编译产物:"
+ls -lh dist/extension.js | awk '{print "   extension.js: " $5}'
 echo ""
-read -p "是否继续打包? (y/n) " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    exit 1
-fi
 
 # 选择操作
 echo ""
