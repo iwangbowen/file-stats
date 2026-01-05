@@ -21,8 +21,6 @@ export class StatusBarManager implements vscode.Disposable {
             : vscode.StatusBarAlignment.Left;
 
         this.statusBarItem = vscode.window.createStatusBarItem(alignment, 100);
-        this.statusBarItem.command = 'file-stats.toggleDetailedInfo';
-        this.statusBarItem.tooltip = 'File Statistics - Click for details';
     }
 
     public async updateForEditor(editor: vscode.TextEditor): Promise<void> {
@@ -59,7 +57,8 @@ export class StatusBarManager implements vscode.Disposable {
             text += ` | Br: ${stats.brotliSize}`;
         }
 
-        this.statusBarItem.text = `$(file) ${text}`;
+        this.statusBarItem.text = text;
+        this.statusBarItem.tooltip = this.createDetailedTooltip(stats);
         this.statusBarItem.show();
     }
 
@@ -152,6 +151,56 @@ export class StatusBarManager implements vscode.Disposable {
     private hideDetailedInfo(): void {
         this.outputChannel.hide();
         this.isShowingDetails = false;
+    }
+
+    private createDetailedTooltip(stats: FileStats): vscode.MarkdownString {
+        const config = this.configManager.getAll();
+        const tooltip = new vscode.MarkdownString();
+        tooltip.isTrusted = true;
+        tooltip.supportHtml = true;
+
+        // Add file path
+        tooltip.appendMarkdown(`### 📄 ${stats.path}\n\n`);
+        tooltip.appendMarkdown('---\n\n');
+
+        // Basic info
+        tooltip.appendMarkdown(`**Size:** ${stats.prettySize}\n\n`);
+
+        if (config.showRawInBytes) {
+            tooltip.appendMarkdown(`**Bytes:** ${stats.size.toLocaleString()}\n\n`);
+        }
+
+        // Compression
+        if (config.showGzip && stats.gzipSize) {
+            tooltip.appendMarkdown(`**Gzipped:** ${stats.gzipSize}\n\n`);
+        }
+        if (config.showBrotli && stats.brotliSize) {
+            tooltip.appendMarkdown(`**Brotli:** ${stats.brotliSize}\n\n`);
+        }
+
+        // Text statistics
+        if (config.showLineCount && stats.lineCount !== undefined) {
+            tooltip.appendMarkdown(`**Lines:** ${stats.lineCount.toLocaleString()}\n\n`);
+        }
+        if (config.showCharCount && stats.charCount !== undefined) {
+            tooltip.appendMarkdown(`**Characters:** ${stats.charCount.toLocaleString()}\n\n`);
+        }
+        if (config.showWordCount && stats.wordCount !== undefined) {
+            tooltip.appendMarkdown(`**Words:** ${stats.wordCount.toLocaleString()}\n\n`);
+        }
+
+        // File metadata
+        if (stats.mimeType) {
+            tooltip.appendMarkdown(`**MIME Type:** ${stats.mimeType}\n\n`);
+        }
+        if (stats.prettyCreated) {
+            tooltip.appendMarkdown(`**Created:** ${stats.prettyCreated}\n\n`);
+        }
+        if (stats.prettyModified) {
+            tooltip.appendMarkdown(`**Modified:** ${stats.prettyModified}\n\n`);
+        }
+
+        return tooltip;
     }
 
     public async refresh(): Promise<void> {
