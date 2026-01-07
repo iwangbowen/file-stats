@@ -1,8 +1,20 @@
 # Changelog
 
+## 1.2.1 (2026-01-08)
+
+🎯 **Major Package Size Optimization**
+
+- Reduced package size by 99.3% (11 MB → 82 KB)
+- Removed unnecessary Python virtual environment (~10 MB, 848 files)
+- Optimized codicons resources (only include required .css and .ttf)
+- Removed development resources and documentation from package
+- Faster download and installation experience
+- No functionality impact - all features work perfectly
+
 ## 1.2.0 (2026-01-08)
 
 ✨ **New Icon Design**
+
 - Completely redesigned extension icon with fresh, modern look
 - Clean light blue background for better visibility
 - Document + data chart style clearly shows functionality
@@ -42,6 +54,7 @@
 🎉 **Initial Release**
 
 **Core Features:**
+
 - 📊 File size display in status bar
 - 📋 Click to view detailed statistics
 - 🗜️ Gzip/Brotli compression analysis
@@ -49,6 +62,7 @@
 - ⚙️ Rich customization options
 
 **Highlights:**
+
 - Real-time auto-updates
 - One-click copy statistics
 - Custom display format support
