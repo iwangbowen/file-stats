@@ -37,8 +37,12 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'node_modules/@vscode/codicons/dist',
-          to: 'codicons'
+          from: 'node_modules/@vscode/codicons/dist/codicon.css',
+          to: 'codicons/codicon.css'
+        },
+        {
+          from: 'node_modules/@vscode/codicons/dist/codicon.ttf',
+          to: 'codicons/codicon.ttf'
         }
       ]
     })

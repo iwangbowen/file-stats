@@ -1,3 +1,4 @@
+# Development files
 .vscode/**
 .vscode-test/**
 out/**
@@ -11,16 +12,28 @@ webpack.config.js
 tsconfig.json
 **/*.map
 *.vsix
+
+# Build and CI
 .github/**
 pnpm-lock.yaml
 .git/**
+publish.sh
+
+# Python related (should not be in TypeScript extension)
+.venv/**
 .mypy_cache/**
 __pycache__/**
 *.py
-icon-original.png
+*.pyc
+
+# Documentation
 PUBLISH.md
 PAT_SETUP.md
 PUBLISHING_CHECKLIST.md
-publish.sh
 OPTIMIZATION.md
 PROJECT_SUMMARY.md
+
+# Assets
+icon-original.png
+icon.svg
+resources/**
