@@ -68,6 +68,22 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
+    // Listen to tab changes to support Custom Editors (images, PDFs, etc.)
+    const onTabChange = vscode.window.tabGroups.onDidChangeTabs(async () => {
+        const activeTab = vscode.window.tabGroups.activeTabGroup.activeTab;
+        if (activeTab?.input) {
+            const input = activeTab.input as unknown;
+            if (
+                input &&
+                typeof input === 'object' &&
+                'uri' in input &&
+                input.uri instanceof vscode.Uri
+            ) {
+                await statusBarManager.updateForUri(input.uri);
+            }
+        }
+    });
+
     const onConfigChange = vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('fileStats')) {
             configManager.reload();
@@ -95,6 +111,7 @@ export function activate(context: vscode.ExtensionContext) {
         copyStatsCommand,
         onSave,
         onActiveEditorChange,
+        onTabChange,
         onConfigChange,
         onTextChange,
         statusBarManager,

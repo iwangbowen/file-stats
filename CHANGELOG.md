@@ -11,7 +11,8 @@
 ### Improvements
 - ✨ Simpler, cleaner architecture using VS Code's Virtual Document Provider
 - 📝 Statistics displayed in native markdown format with emoji icons and table layout
-- 🎨 Opens in Markdown preview mode for better visual presentation
+- 🎨 Opens in Markdown preview mode (side-by-side view) for better visual presentation
+- 🖼️ **NEW**: Support for Custom Editors - now shows file statistics for images, PDFs, and other files opened with custom editors
 - 🎯 Better integration with VS Code's native UI/UX
 - 📦 Smaller package size: removed webview dependencies (@vscode/codicons, copy-webpack-plugin)
 - ⚡ Better performance: no HTML rendering overhead
@@ -19,9 +20,13 @@
 
 ### Technical Changes
 - Created new `StatsDocumentProvider` using `TextDocumentContentProvider` API
-- Updated `StatusBarManager` to use virtual documents instead of webview
+- Added `getStatsForUri()` method to support files without TextEditor
+- Added tab change listener to detect Custom Editor activations
+- **Smart text detection**: Automatically detects binary vs text files by analyzing content (not just extension)
+- Enhanced MIME type detection with 40+ file extensions
 - Simplified webpack configuration (removed CopyWebpackPlugin)
 - Updated all documentation and instructions
+- Optimized compression calculation (skip for large/binary files)
 
 ### Migration Note
 Users upgrading from previous versions will notice:

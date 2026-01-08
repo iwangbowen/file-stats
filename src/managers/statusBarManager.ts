@@ -78,6 +78,26 @@ export class StatusBarManager implements vscode.Disposable {
         }
     }
 
+    public async updateForUri(uri: vscode.Uri): Promise<void> {
+        // Only show status bar for file scheme
+        if (uri.scheme !== 'file') {
+            this.hideStatusBar();
+            return;
+        }
+
+        try {
+            const stats = await this.fileStatsProvider.getStatsForUri(uri);
+            if (stats) {
+                this.updateStatusBar(stats);
+            } else {
+                this.hideStatusBar();
+            }
+        } catch (error) {
+            this.log(`Error updating status bar: ${error}`, 'error');
+            this.hideStatusBar();
+        }
+    }
+
     private updateStatusBar(stats: FileStats): void {
         this.currentStats = stats;
         const config = this.configManager.getAll();
