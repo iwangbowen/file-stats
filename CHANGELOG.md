@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.3.1 (2026-01-08)
+
+🧠 **Smart Text Detection**
+
+### Improvements
+- **Intelligent file type detection**: Now automatically detects binary vs text files by analyzing actual file content instead of relying on hardcoded extension list
+- More accurate text metrics for files with uncommon extensions (`.log`, `.ini`, `.conf`, `.env`, etc.)
+- Improved robustness - supports text files regardless of file extension
+
+### Technical Changes
+- Replaced extension-based text detection with intelligent binary content analysis
+- Analyzes first 1KB of file content to detect non-printable characters
+- Threshold-based detection (if >10% non-printable characters → binary file)
+- Supports any text file format automatically
+
+---
+
 ## 1.3.0 (2026-01-08)
 
 🚀 **Major Refactoring: Virtual Document Provider**
@@ -22,7 +39,6 @@
 - Created new `StatsDocumentProvider` using `TextDocumentContentProvider` API
 - Added `getStatsForUri()` method to support files without TextEditor
 - Added tab change listener to detect Custom Editor activations
-- **Smart text detection**: Automatically detects binary vs text files by analyzing content (not just extension)
 - Enhanced MIME type detection with 40+ file extensions
 - Simplified webpack configuration (removed CopyWebpackPlugin)
 - Updated all documentation and instructions
