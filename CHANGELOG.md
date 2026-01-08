@@ -10,8 +10,9 @@
 
 ### Improvements
 - ✨ Simpler, cleaner architecture using VS Code's Virtual Document Provider
-- 📝 Statistics now displayed in native markdown format with emoji icons
-- 🎨 Better integration with VS Code's native UI/UX
+- 📝 Statistics displayed in native markdown format with emoji icons and table layout
+- 🎨 Opens in Markdown preview mode for better visual presentation
+- 🎯 Better integration with VS Code's native UI/UX
 - 📦 Smaller package size: removed webview dependencies (@vscode/codicons, copy-webpack-plugin)
 - ⚡ Better performance: no HTML rendering overhead
 - 🔧 Cleaner codebase: removed statsWebviewProvider.ts and views directory

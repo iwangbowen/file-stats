@@ -141,16 +141,11 @@ export class StatusBarManager implements vscode.Disposable {
             // Update the document provider with current stats
             this.documentProvider.updateStats(stats);
 
-            // Create and show the virtual document
-            const uri = StatsDocumentProvider.createUri(stats.path);
-            const doc = await vscode.workspace.openTextDocument(uri);
-            await vscode.window.showTextDocument(doc, {
-                viewColumn: vscode.ViewColumn.Beside,
-                preserveFocus: false,
-                preview: false,
-            });
+            // Create URI and open in markdown preview mode in a side-by-side view
+            const uri = StatsDocumentProvider.createUri();
+            await vscode.commands.executeCommand('markdown.showPreviewToSide', uri);
 
-            this.log('Opened statistics document');
+            this.log('Opened statistics document in side-by-side preview mode');
         } else {
             vscode.window.showWarningMessage('No file statistics available');
         }

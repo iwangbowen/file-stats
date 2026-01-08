@@ -22,9 +22,8 @@ export class StatsDocumentProvider implements vscode.TextDocumentContentProvider
     /**
      * Create a URI for displaying file statistics
      */
-    public static createUri(filePath: string): vscode.Uri {
-        const fileName = getFileNameFromPath(filePath);
-        return vscode.Uri.parse(`${this.scheme}:${fileName}.md`);
+    public static createUri(): vscode.Uri {
+        return vscode.Uri.parse(`${this.scheme}:File Statistics`);
     }
 
     /**
@@ -33,7 +32,7 @@ export class StatsDocumentProvider implements vscode.TextDocumentContentProvider
     public updateStats(stats: FileStats): void {
         this.currentStats = stats;
         // Trigger refresh for any open virtual documents
-        this._onDidChange.fire(StatsDocumentProvider.createUri(stats.path));
+        this._onDidChange.fire(StatsDocumentProvider.createUri());
     }
 
     /**
@@ -55,70 +54,71 @@ export class StatsDocumentProvider implements vscode.TextDocumentContentProvider
         const lines: string[] = [];
 
         // Title and file path
-        lines.push(`# ${fileName}`);
-        lines.push('');
-        lines.push(`**Path:** \`${stats.path}\``);
-        lines.push('');
-        lines.push('---');
-        lines.push('');
+        lines.push(
+            `# File Statistics`,
+            '',
+            `## ${fileName}`,
+            '',
+            `**Path:** \`${stats.path}\``,
+            '',
+            '---',
+            ''
+        );
 
-        // File Size Section
-        lines.push('## 📊 File Size');
-        lines.push('');
-        lines.push(`- **Size:** ${stats.prettySize}`);
-        lines.push(`- **Bytes:** ${stats.size.toLocaleString()}`);
+        // File Size Table
+        lines.push('## 📊 File Size', '', '| Metric | Value |', '|--------|-------|');
+        lines.push(`| **Size** | ${stats.prettySize} |`);
+        lines.push(`| **Bytes** | ${stats.size.toLocaleString()} |`);
 
         if (stats.gzipSize) {
-            lines.push(`- **Gzipped:** ${stats.gzipSize}`);
+            lines.push(`| **Gzipped** | ${stats.gzipSize} |`);
         }
         if (stats.brotliSize) {
-            lines.push(`- **Brotli:** ${stats.brotliSize}`);
+            lines.push(`| **Brotli** | ${stats.brotliSize} |`);
         }
         lines.push('');
 
-        // Content Statistics Section (if available)
+        // Content Statistics Table (if available)
         if (
             stats.lineCount !== undefined ||
             stats.charCount !== undefined ||
             stats.wordCount !== undefined
         ) {
-            lines.push('## 📝 Content Statistics');
-            lines.push('');
+            lines.push('## 📝 Content Statistics', '', '| Metric | Value |', '|--------|-------|');
 
             if (stats.lineCount !== undefined) {
-                lines.push(`- **Lines:** ${stats.lineCount.toLocaleString()}`);
+                lines.push(`| **Lines** | ${stats.lineCount.toLocaleString()} |`);
             }
             if (stats.charCount !== undefined) {
-                lines.push(`- **Characters:** ${stats.charCount.toLocaleString()}`);
+                lines.push(`| **Characters** | ${stats.charCount.toLocaleString()} |`);
             }
             if (stats.wordCount !== undefined) {
-                lines.push(`- **Words:** ${stats.wordCount.toLocaleString()}`);
+                lines.push(`| **Words** | ${stats.wordCount.toLocaleString()} |`);
             }
             lines.push('');
         }
 
-        // File Information Section
-        lines.push('## ℹ️ File Information');
-        lines.push('');
+        // File Information Table
+        lines.push('## ℹ️ File Information', '', '| Property | Value |', '|----------|-------|');
 
         if (stats.mimeType) {
-            lines.push(`- **Type:** ${stats.mimeType}`);
+            lines.push(`| **Type** | ${stats.mimeType} |`);
         }
         if (stats.prettyCreated) {
-            lines.push(`- **Created:** ${stats.prettyCreated}`);
+            lines.push(`| **Created** | ${stats.prettyCreated} |`);
         }
         if (stats.prettyModified) {
-            lines.push(`- **Modified:** ${stats.prettyModified}`);
+            lines.push(`| **Modified** | ${stats.prettyModified} |`);
         }
         lines.push('');
 
         // Footer with tips
-        lines.push('---');
-        lines.push('');
         lines.push(
-            '> 💡 **Tip:** You can copy the raw JSON statistics using the "Copy Statistics to Clipboard" command.'
+            '---',
+            '',
+            '> 💡 **Tip:** You can copy the raw JSON statistics using the "Copy Statistics to Clipboard" command.',
+            ''
         );
-        lines.push('');
 
         return lines.join('\n');
     }
