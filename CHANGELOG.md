@@ -1,5 +1,33 @@
 # Changelog
 
+## 1.3.0 (2026-01-08)
+
+🚀 **Major Refactoring: Virtual Document Provider**
+
+### Breaking Changes
+- Replaced Webview panel with clean Markdown document for statistics display
+- Removed "Refresh Statistics" option from QuickPick menu (statistics auto-refresh already available)
+
+### Improvements
+- ✨ Simpler, cleaner architecture using VS Code's Virtual Document Provider
+- 📝 Statistics now displayed in native markdown format with emoji icons
+- 🎨 Better integration with VS Code's native UI/UX
+- 📦 Smaller package size: removed webview dependencies (@vscode/codicons, copy-webpack-plugin)
+- ⚡ Better performance: no HTML rendering overhead
+- 🔧 Cleaner codebase: removed statsWebviewProvider.ts and views directory
+
+### Technical Changes
+- Created new `StatsDocumentProvider` using `TextDocumentContentProvider` API
+- Updated `StatusBarManager` to use virtual documents instead of webview
+- Simplified webpack configuration (removed CopyWebpackPlugin)
+- Updated all documentation and instructions
+
+### Migration Note
+Users upgrading from previous versions will notice:
+- Statistics panel now opens as a markdown document (instead of webview)
+- QuickPick menu has 2 options instead of 3 (removed refresh option)
+- All other functionality remains the same
+
 ## 1.2.1 (2026-01-08)
 
 🎯 **Major Package Size Optimization**

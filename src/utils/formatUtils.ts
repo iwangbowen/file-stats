@@ -25,7 +25,7 @@ export function formatDate(date: Date, use24Hour: boolean): string {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
-        hour12: !use24Hour
+        hour12: !use24Hour,
     };
     return date.toLocaleString(undefined, options);
 }

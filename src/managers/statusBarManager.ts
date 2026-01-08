@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { FileStatsProvider, FileStats } from '../providers/fileStatsProvider';
 import { ConfigManager } from './configManager';
-import { StatsWebviewProvider } from '../views/statsWebviewProvider';
+import { StatsDocumentProvider } from '../providers/statsDocumentProvider';
 import { getFileNameFromPath, formatLogTimestamp } from '../utils/formatUtils';
 
 export class StatusBarManager implements vscode.Disposable {
@@ -10,28 +10,26 @@ export class StatusBarManager implements vscode.Disposable {
     private fileStatsProvider: FileStatsProvider;
     private configManager: ConfigManager;
     private refreshTimer: NodeJS.Timeout | null = null;
-    private webviewProvider: StatsWebviewProvider;
+    private readonly documentProvider: StatsDocumentProvider;
     private currentStats: FileStats | null = null;
 
-    constructor(configManager: ConfigManager, extensionUri: vscode.Uri) {
+    constructor(configManager: ConfigManager, documentProvider: StatsDocumentProvider) {
         this.configManager = configManager;
+        this.documentProvider = documentProvider;
         this.outputChannel = vscode.window.createOutputChannel('File Stats');
 
         // Create file stats provider with logger
-        this.fileStatsProvider = new FileStatsProvider(
-            configManager,
-            (message, level) => this.log(message, level)
+        this.fileStatsProvider = new FileStatsProvider(configManager, (message, level) =>
+            this.log(message, level)
         );
 
-        this.webviewProvider = new StatsWebviewProvider(extensionUri);
         this.statusBarItem = this.createStatusBarItem();
     }
 
     private createStatusBarItem(): vscode.StatusBarItem {
         const position = this.configManager.get('displayPosition');
-        const alignment = position === 'right'
-            ? vscode.StatusBarAlignment.Right
-            : vscode.StatusBarAlignment.Left;
+        const alignment =
+            position === 'right' ? vscode.StatusBarAlignment.Right : vscode.StatusBarAlignment.Left;
 
         const item = vscode.window.createStatusBarItem(alignment, 100);
         item.command = 'file-stats.showQuickPick';
@@ -113,29 +111,22 @@ export class StatusBarManager implements vscode.Disposable {
         const items: vscode.QuickPickItem[] = [
             {
                 label: '$(window) Open Statistics Panel',
-                description: 'Show interactive statistics panel'
-            },
-            {
-                label: '$(refresh) Refresh Statistics',
-                description: 'Refresh current file statistics'
+                description: 'Show statistics in markdown format',
             },
             {
                 label: '$(clippy) Copy Statistics to Clipboard',
-                description: 'Copy file statistics as JSON'
-            }
+                description: 'Copy file statistics as JSON',
+            },
         ];
 
         const selected = await vscode.window.showQuickPick(items, {
-            placeHolder: 'Select an action for file statistics'
+            placeHolder: 'Select an action for file statistics',
         });
 
         if (selected) {
             switch (selected.label) {
                 case '$(window) Open Statistics Panel':
-                    await vscode.commands.executeCommand('file-stats.showWebview');
-                    break;
-                case '$(refresh) Refresh Statistics':
-                    await vscode.commands.executeCommand('file-stats.refreshStats');
+                    await vscode.commands.executeCommand('file-stats.showStatsDocument');
                     break;
                 case '$(clippy) Copy Statistics to Clipboard':
                     await vscode.commands.executeCommand('file-stats.copyStats');
@@ -144,10 +135,22 @@ export class StatusBarManager implements vscode.Disposable {
         }
     }
 
-    public showWebview(): void {
+    public async showStatsDocument(): Promise<void> {
         const stats = this.fileStatsProvider.getCurrentStats();
         if (stats) {
-            this.webviewProvider.show(stats);
+            // Update the document provider with current stats
+            this.documentProvider.updateStats(stats);
+
+            // Create and show the virtual document
+            const uri = StatsDocumentProvider.createUri(stats.path);
+            const doc = await vscode.workspace.openTextDocument(uri);
+            await vscode.window.showTextDocument(doc, {
+                viewColumn: vscode.ViewColumn.Beside,
+                preserveFocus: false,
+                preview: false,
+            });
+
+            this.log('Opened statistics document');
         } else {
             vscode.window.showWarningMessage('No file statistics available');
         }
@@ -162,8 +165,6 @@ export class StatusBarManager implements vscode.Disposable {
         const prefix = level === 'error' ? '[ERROR]' : '[INFO]';
         this.outputChannel.appendLine(`${timestamp} ${prefix} ${message}`);
     }
-
-
 
     private createDetailedTooltip(stats: FileStats): vscode.MarkdownString {
         const config = this.configManager.getAll();
@@ -261,6 +262,5 @@ export class StatusBarManager implements vscode.Disposable {
         this.statusBarItem.dispose();
         this.outputChannel.dispose();
         this.fileStatsProvider.dispose();
-        this.webviewProvider.dispose();
     }
 }

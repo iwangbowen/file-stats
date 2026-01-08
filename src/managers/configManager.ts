@@ -39,7 +39,7 @@ export class ConfigManager implements vscode.Disposable {
             showCharCount: configuration.get('showCharCount', true),
             showWordCount: configuration.get('showWordCount', true),
             autoRefresh: configuration.get('autoRefresh', true),
-            statusBarFormat: configuration.get('statusBarFormat', '${size}')
+            statusBarFormat: configuration.get('statusBarFormat', '${size}'),
         };
     }
 

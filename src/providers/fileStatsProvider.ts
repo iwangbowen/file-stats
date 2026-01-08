@@ -30,7 +30,10 @@ export class FileStatsProvider implements vscode.Disposable {
     private configManager: ConfigManager;
     private readonly logger?: (message: string, level?: 'info' | 'error') => void;
 
-    constructor(configManager: ConfigManager, logger?: (message: string, level?: 'info' | 'error') => void) {
+    constructor(
+        configManager: ConfigManager,
+        logger?: (message: string, level?: 'info' | 'error') => void
+    ) {
         this.configManager = configManager;
         this.logger = logger;
     }
@@ -55,7 +58,7 @@ export class FileStatsProvider implements vscode.Disposable {
                 created: fileStats.birthtime,
                 modified: fileStats.mtime,
                 prettyCreated: formatDate(fileStats.birthtime, config.use24HourFormat),
-                prettyModified: formatDate(fileStats.mtime, config.use24HourFormat)
+                prettyModified: formatDate(fileStats.mtime, config.use24HourFormat),
             };
 
             // Add compression sizes if enabled
@@ -109,23 +112,23 @@ export class FileStatsProvider implements vscode.Disposable {
     private formatSize(bytes: number, useDecimal: boolean): string {
         return filesize(bytes, {
             base: useDecimal ? 10 : 2,
-            standard: useDecimal ? 'si' : 'iec'
+            standard: useDecimal ? 'si' : 'iec',
         }) as string;
     }
 
     private getMimeType(languageId: string): string {
         const mimeTypes: Record<string, string> = {
-            'javascript': 'application/javascript',
-            'typescript': 'application/typescript',
-            'json': 'application/json',
-            'html': 'text/html',
-            'css': 'text/css',
-            'markdown': 'text/markdown',
-            'python': 'text/x-python',
-            'java': 'text/x-java',
-            'xml': 'application/xml',
-            'yaml': 'application/x-yaml',
-            'plaintext': 'text/plain'
+            javascript: 'application/javascript',
+            typescript: 'application/typescript',
+            json: 'application/json',
+            html: 'text/html',
+            css: 'text/css',
+            markdown: 'text/markdown',
+            python: 'text/x-python',
+            java: 'text/x-java',
+            xml: 'application/xml',
+            yaml: 'application/x-yaml',
+            plaintext: 'text/plain',
         };
         return mimeTypes[languageId] || 'application/octet-stream';
     }

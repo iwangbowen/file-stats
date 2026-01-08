@@ -1,5 +1,4 @@
 const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   target: 'node',
@@ -32,19 +31,5 @@ module.exports = {
   devtool: 'nosources-source-map',
   infrastructureLogging: {
     level: "log"
-  },
-  plugins: [
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: 'node_modules/@vscode/codicons/dist/codicon.css',
-          to: 'codicons/codicon.css'
-        },
-        {
-          from: 'node_modules/@vscode/codicons/dist/codicon.ttf',
-          to: 'codicons/codicon.ttf'
-        }
-      ]
-    })
-  ]
+  }
 };

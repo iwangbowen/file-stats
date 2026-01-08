@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**File Stats** is a VS Code extension that displays real-time file statistics (size, compression, text metrics) in the status bar with interactive QuickPick menu and Webview panel.
+**File Stats** is a VS Code extension that displays real-time file statistics (size, compression, text metrics) in the status bar with interactive QuickPick menu and markdown document panel.
 
 - **Language**: TypeScript 5.3+ (strict mode)
 - **VS Code API**: 1.75.0+
@@ -18,30 +18,32 @@
 src/
 ├── extension.ts              # Entry point, command registration
 ├── managers/                 # Business logic & orchestration
-│   ├── statusBarManager.ts   # Status bar, QuickPick, Webview, logging
+│   ├── statusBarManager.ts   # Status bar, QuickPick, logging
 │   └── configManager.ts      # Configuration management
 ├── providers/                # Data processing
-│   └── fileStatsProvider.ts  # File statistics calculation
-└── views/                    # UI components
-    └── statsWebviewProvider.ts # Webview panel HTML generation
+│   ├── fileStatsProvider.ts  # File statistics calculation
+│   └── statsDocumentProvider.ts # Markdown virtual document
+└── utils/                    # Utility functions
+    └── formatUtils.ts        # Formatting helpers
 ```
 
 ### Key Design Patterns
 
 1. **Dependency Injection**: Logger injected into `FileStatsProvider` via constructor
-2. **Separation of Concerns**: Managers (orchestration) → Providers (data) → Views (UI)
+2. **Separation of Concerns**: Managers (orchestration) → Providers (data) → Virtual Documents (UI)
 3. **Disposable Pattern**: All classes implement `vscode.Disposable` for resource cleanup
 4. **Configuration Encapsulation**: All settings accessed via `ConfigManager`
+5. **Virtual Document Pattern**: Statistics displayed via VS Code's TextDocumentContentProvider
 
 ## Core Components
 
 ### StatusBarManager (`managers/statusBarManager.ts`)
-- **Responsibilities**: Status bar lifecycle, QuickPick menu, Webview panel, logging
-- **Dependencies**: ConfigManager, FileStatsProvider, StatsWebviewProvider
+- **Responsibilities**: Status bar lifecycle, QuickPick menu, logging
+- **Dependencies**: ConfigManager, FileStatsProvider, StatsDocumentProvider
 - **Key Methods**:
   - `updateForEditor(editor)` - Main entry point for stat updates
-  - `showQuickPick()` - Display action menu (View Details, Refresh, Copy)
-  - `showWebview()` - Open interactive panel
+  - `showQuickPick()` - Display action menu (View Details, Copy)
+  - `showStatsDocument()` - Open markdown statistics document
   - `log(message, level)` - Output Channel logging with ISO 8601 timestamps
 
 ### FileStatsProvider (`providers/fileStatsProvider.ts`)
@@ -60,10 +62,14 @@ src/
   - Units: `useDecimal` (SI vs IEC), `use24HourFormat`
 - **Methods**: `get<K>(key)`, `getAll()`, `reload()`
 
-### StatsWebviewProvider (`views/statsWebviewProvider.ts`)
-- **Purpose**: Generate interactive HTML panel with VS Code theming
-- **Features**: File info grid, compression stats, text metrics, timestamps
-- **Styling**: Uses `var(--vscode-*)` CSS variables for native theme integration
+### StatsDocumentProvider (`providers/statsDocumentProvider.ts`)
+- **Purpose**: Generate markdown content for file statistics as virtual document
+- **Features**: Clean markdown layout, emoji icons, file information
+- **Integration**: Uses VS Code's TextDocumentContentProvider API
+- **Key Methods**:
+  - `createUri(filePath)` - Create URI for virtual document
+  - `updateStats(stats)` - Update stats and refresh document
+  - `provideTextDocumentContent()` - Generate markdown content
 
 ## Coding Conventions
 
@@ -160,12 +166,12 @@ vsce publish major --no-dependencies  # x.0.0
 | File | Purpose | LOC | Key Points |
 |------|---------|-----|------------|
 | `src/extension.ts` | Entry point | ~100 | Command registration, event subscriptions |
-| `src/managers/statusBarManager.ts` | Orchestration | ~400 | QuickPick, Webview, ISO logging |
+| `src/managers/statusBarManager.ts` | Orchestration | ~300 | QuickPick, document opening, ISO logging |
 | `src/providers/fileStatsProvider.ts` | Data processing | ~200 | Compression (gzip/brotli), text metrics |
+| `src/providers/statsDocumentProvider.ts` | UI | ~120 | Markdown generation, virtual document |
 | `src/managers/configManager.ts` | Config | ~60 | Reactive config loading |
-| `src/views/statsWebviewProvider.ts` | UI | ~280 | HTML generation, VS Code theming |
 | `package.json` | Manifest | ~150 | 4 commands, 13 settings |
-| `webpack.config.js` | Build | ~35 | Targets Node.js, externalizes vscode |
+| `webpack.config.js` | Build | ~30 | Targets Node.js, externalizes vscode |
 
 ## Common Tasks
 
@@ -194,7 +200,7 @@ vsce publish major --no-dependencies  # x.0.0
 ### Extending File Statistics
 1. Add property to `FileStats` interface (`providers/fileStatsProvider.ts`)
 2. Calculate in `getStatsForDocument()` method
-3. Add to Webview HTML in `statsWebviewProvider.ts`
+3. Add to markdown generation in `statsDocumentProvider.ts`
 4. Update tooltip in `statusBarManager.ts` if needed
 
 ## Testing & Debugging
@@ -204,7 +210,7 @@ vsce publish major --no-dependencies  # x.0.0
 2. Open a file in the new window
 3. Check status bar for stats display
 4. Test QuickPick menu (click status bar)
-5. Test Webview panel (select "Open Statistics Panel")
+5. Test markdown panel (select "Open Statistics Panel")
 
 ### Output Channel Logging
 - All logs go to "File Stats" Output Channel
@@ -221,7 +227,7 @@ vsce publish major --no-dependencies  # x.0.0
 
 - **filesize** (v10.1.0): Human-readable size formatting (SI/IEC units)
 - **zlib** (Node.js built-in): gzip/brotli compression
-- **vscode** (API v1.75.0+): Status bar, commands, webview, clipboard
+- **vscode** (API v1.75.0+): Status bar, commands, virtual documents, clipboard
 
 ## Marketplace Information
 

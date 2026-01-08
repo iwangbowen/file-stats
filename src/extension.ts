@@ -1,50 +1,56 @@
 import * as vscode from 'vscode';
 import { StatusBarManager } from './managers/statusBarManager';
 import { ConfigManager } from './managers/configManager';
+import { StatsDocumentProvider } from './providers/statsDocumentProvider';
 
 let statusBarManager: StatusBarManager;
 let configManager: ConfigManager;
+let documentProvider: StatsDocumentProvider;
 
 export function activate(context: vscode.ExtensionContext) {
     // Initialize managers
     configManager = new ConfigManager();
-    statusBarManager = new StatusBarManager(configManager, context.extensionUri);
+    documentProvider = new StatsDocumentProvider();
+    statusBarManager = new StatusBarManager(configManager, documentProvider);
 
-    const showWebviewCommand = vscode.commands.registerCommand(
-        'file-stats.showWebview',
-        () => statusBarManager.showWebview()
+    // Register the document provider
+    const providerRegistration = vscode.workspace.registerTextDocumentContentProvider(
+        StatsDocumentProvider.getScheme(),
+        documentProvider
     );
 
-    const showQuickPickCommand = vscode.commands.registerCommand(
-        'file-stats.showQuickPick',
-        () => statusBarManager.showQuickPick()
+    const showStatsDocumentCommand = vscode.commands.registerCommand(
+        'file-stats.showStatsDocument',
+        () => statusBarManager.showStatsDocument()
     );
 
-    const refreshCommand = vscode.commands.registerCommand(
-        'file-stats.refreshStats',
-        () => statusBarManager.refresh()
+    const showQuickPickCommand = vscode.commands.registerCommand('file-stats.showQuickPick', () =>
+        statusBarManager.showQuickPick()
     );
 
-    const copyStatsCommand = vscode.commands.registerCommand(
-        'file-stats.copyStats',
-        async () => {
-            try {
-                const stats = statusBarManager.getCurrentStats();
-                if (stats) {
-                    const statsText = JSON.stringify(stats, null, 2);
-                    await vscode.env.clipboard.writeText(statsText);
-                    vscode.window.showInformationMessage('File statistics copied to clipboard');
-                    statusBarManager.log('File statistics copied to clipboard');
-                } else {
-                    vscode.window.showWarningMessage('No file statistics available. Please open a file first.');
-                    statusBarManager.log('Failed to copy: No file statistics available');
-                }
-            } catch (error) {
-                vscode.window.showErrorMessage('Failed to copy file statistics');
-                statusBarManager.log(`Error copying statistics: ${error}`);
+    const refreshCommand = vscode.commands.registerCommand('file-stats.refreshStats', () =>
+        statusBarManager.refresh()
+    );
+
+    const copyStatsCommand = vscode.commands.registerCommand('file-stats.copyStats', async () => {
+        try {
+            const stats = statusBarManager.getCurrentStats();
+            if (stats) {
+                const statsText = JSON.stringify(stats, null, 2);
+                await vscode.env.clipboard.writeText(statsText);
+                vscode.window.showInformationMessage('File statistics copied to clipboard');
+                statusBarManager.log('File statistics copied to clipboard');
+            } else {
+                vscode.window.showWarningMessage(
+                    'No file statistics available. Please open a file first.'
+                );
+                statusBarManager.log('Failed to copy: No file statistics available');
             }
+        } catch (error) {
+            vscode.window.showErrorMessage('Failed to copy file statistics');
+            statusBarManager.log(`Error copying statistics: ${error}`);
         }
-    );
+    });
 
     // Register event listeners
     const onSave = vscode.workspace.onDidSaveTextDocument(() => {
@@ -71,7 +77,10 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     const onTextChange = vscode.workspace.onDidChangeTextDocument((e) => {
-        if (configManager.get('autoRefresh') && e.document === vscode.window.activeTextEditor?.document) {
+        if (
+            configManager.get('autoRefresh') &&
+            e.document === vscode.window.activeTextEditor?.document
+        ) {
             // Debounce text changes
             statusBarManager.scheduleRefresh(500);
         }
@@ -79,7 +88,8 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Add to subscriptions
     context.subscriptions.push(
-        showWebviewCommand,
+        providerRegistration,
+        showStatsDocumentCommand,
         showQuickPickCommand,
         refreshCommand,
         copyStatsCommand,
@@ -87,7 +97,8 @@ export function activate(context: vscode.ExtensionContext) {
         onActiveEditorChange,
         onConfigChange,
         onTextChange,
-        statusBarManager
+        statusBarManager,
+        documentProvider
     );
 
     // Initial update
