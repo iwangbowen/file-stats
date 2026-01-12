@@ -126,30 +126,17 @@ npm run compile
 1. **打包扩展**（可选,用于本地测试）:
 
 ```bash
-pnpm run vsce:package
+pnpm run pkg
 ```
 
 这会生成一个 `.vsix` 文件,可以手动安装测试:
 - VS Code → Extensions → ... → Install from VSIX
 
-2. **发布到市场** (手动版本控制):
+2. **发布到市场**:
 
 ```bash
-# 确保已在 package.json 中手动更新版本号
-pnpm run vsce:publish
-```
-
-3. **发布到市场** (自动升级版本):
-
-```bash
-# 补丁版本 (1.0.0 -> 1.0.1)
-pnpm run vsce:publish:patch
-
-# 次版本 (1.0.0 -> 1.1.0)
-pnpm run vsce:publish:minor
-
-# 主版本 (1.0.0 -> 2.0.0)
-pnpm run vsce:publish:major
+# 确保已在 package.json 中手动更新版本号和 CHANGELOG.md
+pnpm run publish
 ```
 
 > **说明**: 所有命令都自动包含 `--no-dependencies` 标志,因为项目使用 webpack 打包,所有依赖已包含在 bundle 中。
@@ -274,35 +261,33 @@ vsce login <your-publisher-name>
 pnpm run package
 
 # 4. 测试打包（可选）
-pnpm run vsce:package
+pnpm run pkg
 
 # 5. 发布
-pnpm run vsce:publish
+pnpm run publish
 ```
 
 ## 后续更新
 
 ```bash
 # 1. 修改代码
-# 2. 更新 CHANGELOG.md
-# 3. 提交代码
+# 2. 更新 package.json 中的版本号
+# 3. 更新 CHANGELOG.md
+# 4. 提交代码
 git add .
 git commit -m "描述更新内容"
 git push
 
-# 4. 发布新版本（自动升级版本号）
-pnpm run vsce:publish:patch  # 或 minor/major
+# 5. 发布新版本
+pnpm run publish
 ```
 
 ## 可用的 npm scripts
 
 | 命令 | 说明 |
-|------|------|
-| `pnpm run vsce:package` | 打包为 .vsix 文件 |
-| `pnpm run vsce:publish` | 发布当前版本到市场 |
-| `pnpm run vsce:publish:patch` | 发布补丁版本 (x.x.X) |
-| `pnpm run vsce:publish:minor` | 发布次版本 (x.X.0) |
-| `pnpm run vsce:publish:major` | 发布主版本 (X.0.0) |
+| --- | --- |
+| `pnpm run pkg` | 打包为 .vsix 文件 |
+| `pnpm run publish` | 发布到市场 |
 
 ## 参考资料
 
