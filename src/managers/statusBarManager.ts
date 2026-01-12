@@ -59,12 +59,6 @@ export class StatusBarManager implements vscode.Disposable {
     public async updateForEditor(editor: vscode.TextEditor): Promise<void> {
         const document = editor.document;
 
-        // Only show status bar for file scheme (not settings, output, etc.)
-        if (document.uri.scheme !== 'file') {
-            this.hideStatusBar();
-            return;
-        }
-
         try {
             const stats = await this.fileStatsProvider.getStatsForDocument(document);
             if (stats) {
@@ -79,12 +73,6 @@ export class StatusBarManager implements vscode.Disposable {
     }
 
     public async updateForUri(uri: vscode.Uri): Promise<void> {
-        // Only show status bar for file scheme
-        if (uri.scheme !== 'file') {
-            this.hideStatusBar();
-            return;
-        }
-
         try {
             const stats = await this.fileStatsProvider.getStatsForUri(uri);
             if (stats) {

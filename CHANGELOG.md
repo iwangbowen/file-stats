@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.4.0 (2026-01-12)
+
+🌐 **Virtual Workspace Support**
+
+### New Features
+- **Full virtual workspace support**: Now works with GitHub Repositories extension, VS Code for Web, and other virtual file systems
+- Supports all URI schemes (not limited to `file:` scheme)
+- Compatible with remote development environments
+
+### Technical Changes
+- Migrated from Node.js `fs` module to `vscode.workspace.fs` API for file system operations
+- Removed hardcoded `uri.scheme !== 'file'` checks
+- Updated to use `node:zlib` and `node:util` imports (Node.js built-in module convention)
+- Fixed TypeScript strict mode compliance
+- Added `capabilities.virtualWorkspaces: true` to package.json
+
+### Compatibility
+- Works with local files (unchanged behavior)
+- Works with GitHub Repositories (e.g., `vscode-vfs://github/...`)
+- Works in VS Code for Web (browser-based)
+- Works with any file system provider extension
+
+---
+
 ## 1.3.1 (2026-01-08)
 
 🧠 **Smart Text Detection**

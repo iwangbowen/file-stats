@@ -16,6 +16,7 @@ Enhanced file statistics display for Visual Studio Code. Shows file size, line c
 - **Hover Tooltip**: View detailed stats without clicking
 - **Position Control**: Display on left or right side of status bar (instant update)
 - **Logging**: Comprehensive logging with ISO 8601 timestamps
+- **Virtual Workspaces**: Full support for remote and virtual file systems (GitHub Repositories, VS Code for Web)
 
 ## Donation
 
@@ -191,6 +192,7 @@ This extension is inspired by [vscode-filesize](https://github.com/mkxml/vscode-
 - More intuitive configuration options
 - Better error messages
 - Cleaner detailed view layout
+- **Virtual workspace support** - Works with GitHub Repositories and remote file systems
 
 ## Development
 

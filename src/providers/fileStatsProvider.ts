@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as zlib from 'zlib';
-import { promisify } from 'util';
+import * as zlib from 'node:zlib';
+import { promisify } from 'node:util';
 import { filesize } from 'filesize';
 import { ConfigManager } from '../managers/configManager';
 import { formatDate, countWords } from '../utils/formatUtils';
@@ -27,7 +26,7 @@ export interface FileStats {
 
 export class FileStatsProvider implements vscode.Disposable {
     private currentStats: FileStats | null = null;
-    private configManager: ConfigManager;
+    private readonly configManager: ConfigManager;
     private readonly logger?: (message: string, level?: 'info' | 'error') => void;
 
     constructor(
@@ -39,26 +38,22 @@ export class FileStatsProvider implements vscode.Disposable {
     }
 
     public async getStatsForDocument(document: vscode.TextDocument): Promise<FileStats | null> {
-        if (document.uri.scheme !== 'file') {
-            return null;
-        }
-
         try {
-            const filePath = document.uri.fsPath;
-            const fileStats = await fs.promises.stat(filePath);
-            const content = await fs.promises.readFile(filePath);
+            const uri = document.uri;
+            const fileStats = await vscode.workspace.fs.stat(uri);
+            const content = await vscode.workspace.fs.readFile(uri);
 
             const config = this.configManager.getAll();
             const size = fileStats.size;
 
             const stats: FileStats = {
-                path: filePath,
+                path: uri.toString(),
                 size,
                 prettySize: this.formatSize(size, config.useDecimal),
-                created: fileStats.birthtime,
-                modified: fileStats.mtime,
-                prettyCreated: formatDate(fileStats.birthtime, config.use24HourFormat),
-                prettyModified: formatDate(fileStats.mtime, config.use24HourFormat),
+                created: new Date(fileStats.ctime),
+                modified: new Date(fileStats.mtime),
+                prettyCreated: formatDate(new Date(fileStats.ctime), config.use24HourFormat),
+                prettyModified: formatDate(new Date(fileStats.mtime), config.use24HourFormat),
             };
 
             // Add compression sizes if enabled
@@ -106,37 +101,35 @@ export class FileStatsProvider implements vscode.Disposable {
     }
 
     public async getStatsForUri(uri: vscode.Uri): Promise<FileStats | null> {
-        if (uri.scheme !== 'file') {
-            return null;
-        }
-
         try {
-            const filePath = uri.fsPath;
-            const fileStats = await fs.promises.stat(filePath);
-            const content = await fs.promises.readFile(filePath);
+            const fileStats = await vscode.workspace.fs.stat(uri);
+            const content = await vscode.workspace.fs.readFile(uri);
 
             const config = this.configManager.getAll();
             const size = fileStats.size;
 
             const stats: FileStats = {
-                path: filePath,
+                path: uri.toString(),
                 size,
                 prettySize: this.formatSize(size, config.useDecimal),
-                created: fileStats.birthtime,
-                modified: fileStats.mtime,
-                prettyCreated: formatDate(fileStats.birthtime, config.use24HourFormat),
-                prettyModified: formatDate(fileStats.mtime, config.use24HourFormat),
+                created: new Date(fileStats.ctime),
+                modified: new Date(fileStats.mtime),
+                prettyCreated: formatDate(new Date(fileStats.ctime), config.use24HourFormat),
+                prettyModified: formatDate(new Date(fileStats.mtime), config.use24HourFormat),
             };
 
-            // Determine file extension and MIME type
-            const ext = filePath.toLowerCase().split('.').pop() || '';
+            // Determine file extension and MIME type from URI path
+            const pathSegments = uri.path.split('/');
+            const fileName = pathSegments.at(-1) || '';
+            const ext = fileName.toLowerCase().split('.').pop() || '';
             stats.mimeType = this.getMimeTypeFromExtension(ext);
 
             // Try to detect if file is text by attempting UTF-8 decoding
             // Skip compression and text stats for very large files (>10MB)
             if (size < 10 * 1024 * 1024) {
                 try {
-                    const text = content.toString('utf-8');
+                    const decoder = new TextDecoder('utf-8');
+                    const text = decoder.decode(content);
                     const isText = this.isValidText(text);
 
                     if (isText) {
@@ -201,7 +194,7 @@ export class FileStatsProvider implements vscode.Disposable {
         const sampleSize = Math.min(text.length, 1000); // Sample first 1000 chars
 
         for (let i = 0; i < sampleSize; i++) {
-            const code = text.charCodeAt(i);
+            const code = text.codePointAt(i) || 0;
             // Allow: tab (9), newline (10), carriage return (13), printable ASCII (32-126), extended ASCII (128+)
             if (
                 code !== 9 &&
@@ -225,7 +218,7 @@ export class FileStatsProvider implements vscode.Disposable {
         return filesize(bytes, {
             base: useDecimal ? 10 : 2,
             standard: useDecimal ? 'si' : 'iec',
-        }) as string;
+        }).toString();
     }
 
     private getMimeType(languageId: string): string {
