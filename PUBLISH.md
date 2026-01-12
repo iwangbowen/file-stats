@@ -119,48 +119,57 @@ npm run compile
 
 ## 发布步骤
 
-### 方法一：使用vsce命令行（推荐）
+### 使用 npm scripts (推荐)
 
-1. **打包扩展**（可选，用于测试）:
+项目已在 `package.json` 中配置了发布相关脚本:
+
+1. **打包扩展**（可选,用于本地测试）:
 
 ```bash
-vsce package --no-dependencies
+pnpm run vsce:package
 ```
 
-> **注意**: 使用 `--no-dependencies` 标志跳过npm依赖检查，因为我们使用webpack打包，所有依赖已包含在bundle中。
-
-这会生成一个 `.vsix` 文件，可以手动安装测试：
+这会生成一个 `.vsix` 文件,可以手动安装测试:
 - VS Code → Extensions → ... → Install from VSIX
 
-2. **发布到市场**:
+2. **发布到市场** (手动版本控制):
 
 ```bash
-vsce publish --no-dependencies
+# 确保已在 package.json 中手动更新版本号
+pnpm run vsce:publish
 ```
 
-或指定版本号自动升级：
+3. **发布到市场** (自动升级版本):
 
 ```bash
-vsce publish patch --no-dependencies  # 1.0.0 -> 1.0.1
-vsce publish minor --no-dependencies  # 1.0.0 -> 1.1.0
-vsce publish major --no-dependencies  # 1.0.0 -> 2.0.0
+# 补丁版本 (1.0.0 -> 1.0.1)
+pnpm run vsce:publish:patch
+
+# 次版本 (1.0.0 -> 1.1.0)
+pnpm run vsce:publish:minor
+
+# 主版本 (1.0.0 -> 2.0.0)
+pnpm run vsce:publish:major
 ```
 
-### 方法二：Web界面上传
+> **说明**: 所有命令都自动包含 `--no-dependencies` 标志,因为项目使用 webpack 打包,所有依赖已包含在 bundle 中。
 
-1. 打包扩展:
+### 使用 vsce 命令行 (可选)
+
+如果需要更精细的控制,也可以直接使用 vsce:
 
 ```bash
+# 打包
 vsce package --no-dependencies
+
+# 发布
+vsce publish --no-dependencies
+
+# 发布并升级版本
+vsce publish patch --no-dependencies
+vsce publish minor --no-dependencies
+vsce publish major --no-dependencies
 ```
-
-2. 访问 [Marketplace管理页面](https://marketplace.visualstudio.com/manage)
-
-3. 点击你的发布者账号
-
-4. 点击 "New extension" → "Visual Studio Code"
-
-5. 上传生成的 `.vsix` 文件
 
 ## 常见问题
 
@@ -259,31 +268,41 @@ out/test/**
 npm install -g @vscode/vsce
 
 # 2. 登录（输入PAT）
-vsce login iwangbowen
+vsce login <your-publisher-name>
 
 # 3. 编译生产版本
 pnpm run package
 
 # 4. 测试打包（可选）
-vsce package --no-dependencies
+pnpm run vsce:package
 
 # 5. 发布
-vsce publish --no-dependencies
+pnpm run vsce:publish
 ```
-
-> **重要**: 使用 `--no-dependencies` 标志，因为webpack已打包所有依赖
 
 ## 后续更新
 
 ```bash
-# 修改代码后
+# 1. 修改代码
+# 2. 更新 CHANGELOG.md
+# 3. 提交代码
 git add .
 git commit -m "描述更新内容"
 git push
 
-# 发布新版本
-vsce publish patch --no-dependencies  # 或 minor/major
+# 4. 发布新版本（自动升级版本号）
+pnpm run vsce:publish:patch  # 或 minor/major
 ```
+
+## 可用的 npm scripts
+
+| 命令 | 说明 |
+|------|------|
+| `pnpm run vsce:package` | 打包为 .vsix 文件 |
+| `pnpm run vsce:publish` | 发布当前版本到市场 |
+| `pnpm run vsce:publish:patch` | 发布补丁版本 (x.x.X) |
+| `pnpm run vsce:publish:minor` | 发布次版本 (x.X.0) |
+| `pnpm run vsce:publish:major` | 发布主版本 (X.0.0) |
 
 ## 参考资料
 

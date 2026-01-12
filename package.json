@@ -146,7 +146,12 @@
     "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "vsce:package": "vsce package --no-dependencies",
+    "vsce:publish": "vsce publish --no-dependencies",
+    "vsce:publish:patch": "vsce publish patch --no-dependencies",
+    "vsce:publish:minor": "vsce publish minor --no-dependencies",
+    "vsce:publish:major": "vsce publish major --no-dependencies"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
