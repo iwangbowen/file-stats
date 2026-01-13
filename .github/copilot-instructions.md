@@ -6,7 +6,7 @@
 
 - **Language**: TypeScript 5.3+ (strict mode)
 - **VS Code API**: 1.75.0+
-- **Build System**: Webpack (production bundling)
+- **Build System**: esbuild (fast production bundling)
 - **Package Manager**: pnpm
 - **Publisher**: WangBowen (marketplace ID: `WangBowen.file-stats`)
 
@@ -134,7 +134,7 @@ public dispose(): void {
 pnpm install              # Install dependencies
 pnpm run compile          # TypeScript → JavaScript (dev)
 pnpm run watch            # Watch mode for development
-pnpm run package          # Production build (webpack)
+pnpm run package          # Production build (esbuild)
 pnpm run lint             # ESLint check
 pnpm run format           # Prettier formatting
 ```
@@ -151,7 +151,7 @@ vsce publish minor --no-dependencies  # 1.x.0
 vsce publish major --no-dependencies  # x.0.0
 ```
 
-**Important**: Always use `--no-dependencies` due to pnpm's symlink structure. Webpack bundles all dependencies into `dist/extension.js`.
+**Important**: Always use `--no-dependencies` due to pnpm's symlink structure. esbuild bundles all dependencies into `dist/extension.js`.
 
 ### Pre-Publish Checklist
 1. Update `CHANGELOG.md` with new version entry
@@ -171,7 +171,7 @@ vsce publish major --no-dependencies  # x.0.0
 | `src/providers/statsDocumentProvider.ts` | UI | ~120 | Markdown generation, virtual document |
 | `src/managers/configManager.ts` | Config | ~60 | Reactive config loading |
 | `package.json` | Manifest | ~150 | 4 commands, 13 settings |
-| `webpack.config.js` | Build | ~30 | Targets Node.js, externalizes vscode |
+| `esbuild.js` | Build | ~50 | Targets Node.js, externalizes vscode |
 
 ## Common Tasks
 

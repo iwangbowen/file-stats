@@ -8,7 +8,7 @@ src/**
 .vscodeignore
 .eslintrc.json
 .prettierrc
-webpack.config.js
+esbuild.js
 tsconfig.json
 **/*.map
 *.vsix
