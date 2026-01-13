@@ -22,7 +22,7 @@ Enhanced file statistics display for Visual Studio Code. Shows file size, line c
 
 If you find this extension helpful, consider supporting the development:
 
-![WeChat Pay](resources/wechat-pay.jpg)
+<img src="resources/wechat-pay.jpg" alt="WeChat Pay" width="180" />
 
 ## Screenshots
 
