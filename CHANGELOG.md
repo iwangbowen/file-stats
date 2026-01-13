@@ -1,8 +1,12 @@
 # Changelog
 
+## 1.4.2 (2026-01-13)
+
+- Fix `extensionKind` property configuration
+
 ## 1.4.1 (2026-01-13)
 
-### Configure `extensionKind` property
+- Configure `extensionKind` property
 
 ## 1.4.0 (2026-01-12)
 
