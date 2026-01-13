@@ -31,7 +31,7 @@
   ],
   "main": "./dist/extension.js",
   "extensionKind": [
-    "workspace"
+    "ui", "workspace"
   ],
   "capabilities": {
     "virtualWorkspaces": true
