@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.1 (2026-01-13)
+
+### Configure `extensionKind` property
+
 ## 1.4.0 (2026-01-12)
 
 🌐 **Virtual Workspace Support**
